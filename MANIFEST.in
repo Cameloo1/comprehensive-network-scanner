@@ -1,0 +1,13 @@
+include README.md
+include LICENSE
+include requirements.txt
+include pyproject.toml
+include CHANGELOG.md
+include CONTRIBUTING.md
+recursive-include app/ui/templates *.html
+recursive-include app/ui/static *
+global-exclude *.pyc
+global-exclude __pycache__
+global-exclude *.so
+global-exclude .DS_Store
+global-exclude Thumbs.db

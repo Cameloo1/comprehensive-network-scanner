@@ -1,0 +1,12 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Evolve NetScan</title>
+<style>body{font-family:system-ui,Arial;margin:2rem}label{display:block;margin:.5rem 0}
+input[type=text]{width:360px;padding:.5rem}button{padding:.5rem 1rem;margin-top:.5rem}</style>
+</head><body>
+<h1>Evolve NetScan</h1>
+<form method="post" action="/ui/start">
+  <label>Target (IP or CIDR)</label>
+  <input name="target" type="text" placeholder="127.0.0.1 or 192.0.2.0/28" required>
+  <label><input name="safe_mode" type="checkbox" checked> Safe Mode</label>
+  <button type="submit">Start Scan</button>
+</form>
+</body></html>

@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Scan Report {{ scan.id }}</title>
+<style>
+body{font-family:system-ui,Arial;margin:2rem}
+h1,h2{margin:.2rem 0} table{border-collapse:collapse;width:100%}
+th,td{border:1px solid #ddd;padding:.4rem} .badge{padding:.2rem .5rem;border-radius:.3rem}
+.critical{background:#5c0000;color:#fff}.high{background:#9b1c1c;color:#fff}
+.medium{background:#b7791f;color:#fff}.low{background:#2b6cb0;color:#fff}.info{background:#4a5568;color:#fff}
+</style></head><body>
+<h1>External Vulnerability Assessment</h1>
+<p><strong>Scan ID:</strong> {{ scan.id }} | <strong>Target:</strong> {{ scan.target }} | <strong>Safe Mode:</strong> {{ scan.safe_mode }}</p>
+
+<h2>Executive Summary</h2>
+<p>
+  <span class="badge high">High: {{ totals.high }}</span>
+  <span class="badge medium">Medium: {{ totals.medium }}</span>
+  <span class="badge low">Low: {{ totals.low }}</span>
+  <span class="badge info">Info: {{ totals.info }}</span>
+</p>
+
+{% for h in hosts %}
+<h2>Host: {{ h.ip }} {% if h.rdns %}({{ h.rdns }}){% endif %}</h2>
+<p><strong>Open Ports:</strong>
+{% if h.ports %}{% for p in h.ports %}{{p.port}}/{{p.proto}} {{p.service}}{% if p.version %} ({{p.version}}){% endif %}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}None{% endif %}</p>
+
+<h3>Findings</h3>
+<table><thead><tr><th>Severity</th><th>Title</th><th>Evidence</th><th>Fix</th></tr></thead><tbody>
+{% for f in h.findings %}
+<tr>
+  <td><span class="badge {{ f.severity }}">{{ f.severity|capitalize }}</span></td>
+  <td>{{ f.name }}</td>
+  <td>{{ f.evidence }}</td>
+  <td>{{ f.remediation }}</td>
+</tr>
+{% else %}
+<tr><td colspan="4">No findings.</td></tr>
+{% endfor %}
+</tbody></table>
+{% endfor %}
+
+<h2>Recommendations</h2>
+<ul>
+  <li>Patch or update services with High findings first; verify exposure is minimized.</li>
+  <li>Harden TLS (disable weak protocols/ciphers; renew expired certs).</li>
+  <li>Remove unnecessary open ports; restrict admin panels.</li>
+</ul>
+</body></html>
