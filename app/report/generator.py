@@ -99,6 +99,30 @@ def make_report(scan_id:str):
                     ports_text = ", ".join([f"{p['port']}/{p['proto']} ({p['service']})" for p in host['ports']])
                     story.append(Paragraph(ports_text, styles['Normal']))
                 
+                # Add WHOIS information
+                if host.get('whois') and host['whois'].get('network'):
+                    story.append(Paragraph("WHOIS Information:", styles['Heading3']))
+                    whois = host['whois']
+                    story.append(Paragraph(f"<b>Organization:</b> {whois.get('network', {}).get('name', 'N/A')}", styles['Normal']))
+                    story.append(Paragraph(f"<b>ASN:</b> {whois.get('asn', 'N/A')} ({whois.get('asn_description', 'N/A')})", styles['Normal']))
+                    story.append(Paragraph(f"<b>Country:</b> {whois.get('asn_country_code', 'N/A')}", styles['Normal']))
+                    story.append(Paragraph(f"<b>CIDR:</b> {whois.get('asn_cidr', 'N/A')}", styles['Normal']))
+                    story.append(Paragraph(f"<b>Network Range:</b> {whois.get('network', {}).get('start_address', 'N/A')} - {whois.get('network', {}).get('end_address', 'N/A')}", styles['Normal']))
+                    
+                    # Add contact information
+                    if whois.get('objects'):
+                        story.append(Paragraph("Contacts:", styles['Heading4']))
+                        for obj_key, obj in whois['objects'].items():
+                            if obj.get('contact'):
+                                contact = obj['contact']
+                                story.append(Paragraph(f"<b>{obj_key}:</b> {contact.get('name', 'N/A')}", styles['Normal']))
+                                if contact.get('email'):
+                                    email = contact['email'][0]['value'] if contact['email'] else 'N/A'
+                                    story.append(Paragraph(f"  Email: {email}", styles['Normal']))
+                                if contact.get('phone'):
+                                    phone = contact['phone'][0]['value'] if contact['phone'] else 'N/A'
+                                    story.append(Paragraph(f"  Phone: {phone}", styles['Normal']))
+                
                 if host['findings']:
                     story.append(Paragraph("Findings:", styles['Heading3']))
                     for finding in host['findings']:
