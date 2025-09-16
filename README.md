@@ -336,66 +336,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 The authors and contributors are not responsible for any misuse of this tool.
 
-## Support
+- Tools Used
+Nmap, Nuclei, SSLyze, WhatWeb, FastAPI, Typer
 
-### Getting Help
-- **Documentation**: Check this README and inline help (`netscan help`)
-- **Issues**: Report bugs and request features on [GitHub Issues](https://github.com/yourusername/evolve-netscan/issues)
-- **Discussions**: Join community discussions on [GitHub Discussions](https://github.com/yourusername/evolve-netscan/discussions)
-
-### Common Issues
-
-#### Installation Issues
-```bash
-# If you get permission errors on Windows
-pip install --user -r requirements.txt
-
-# If you get SSL errors
-pip install --trusted-host pypi.org --trusted-host pypi.python.org -r requirements.txt
-```
-
-#### Scanning Issues
-```bash
-# If scans hang, try reducing workers
-netscan scan 1.1.1.1 --safe --workers 1
-
-# If you get "command not found" errors, ensure tools are in PATH
-which nmap
-which nuclei
-```
-
-#### Report Issues
-```bash
-# If PDF generation fails, HTML reports will still be generated
-# Check the reports/ directory for HTML files
-```
-
-## 🏆 Acknowledgments
-
-- **Nmap**: Network discovery and security auditing
-- **Nuclei**: Vulnerability scanner with community templates
-- **SSLyze**: Fast SSL/TLS configuration analyzer
-- **WhatWeb**: Web technology identifier
-- **FastAPI**: Modern web framework for building APIs
-- **Typer**: Great developer experience for CLI applications
-
-## 📈 Roadmap
-
-### Upcoming Features
-- [ ] Web-based dashboard interface
+Roadmap
+Upcoming Features
 - [ ] Additional vulnerability scanners
 - [ ] Custom report templates
 - [ ] Integration with SIEM platforms
 - [ ] Automated remediation suggestions
-- [ ] Multi-user support with role-based access
 
-### Version History
+Version History
 - **v1.0.0**: Initial release with core scanning capabilities
 - **v1.1.0**: Added progress tracking and worker configuration
 - **v1.2.0**: Enhanced reporting and API improvements
 
----
 
-**Made with ❤️ by Wasif Amin**
-
-For more information, visit our [GitHub repository](https://github.com/yourusername/netscan).
