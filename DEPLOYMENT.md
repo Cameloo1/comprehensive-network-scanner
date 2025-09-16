@@ -11,9 +11,11 @@ This guide provides comprehensive instructions for deploying NetScan in various 
 - **Storage**: 500MB free space for installation and scan results
 
 ### External Tools (Optional)
-- **Nmap**: For advanced port scanning
-- **Nuclei**: For vulnerability scanning
-- **WhatWeb**: For web fingerprinting
+- **Nmap**: For advanced port scanning and service enumeration
+- **Nuclei**: For safe vulnerability scanning with timeout protection
+- **WhatWeb**: For web application fingerprinting (Python fallback included)
+- **SSLyze**: For comprehensive TLS/SSL configuration analysis
+- **TestSSL**: For additional SSL/TLS testing and cipher analysis
 
 ## 🔧 Installation Methods
 
@@ -236,6 +238,14 @@ reporting:
   default_format: "html"
   include_pdf: true
   template_path: "app/ui/templates"
+  
+# Comprehensive Report Features
+# - Port scan results with detailed state information
+# - WHOIS data with network ownership details
+# - Web application fingerprinting and technology detection
+# - TLS/SSL analysis with certificate validation
+# - Vulnerability findings with source attribution
+# - Professional HTML and PDF formatting
 ```
 
 ## 🔒 Security Considerations

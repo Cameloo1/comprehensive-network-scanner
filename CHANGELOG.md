@@ -8,22 +8,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Nothing yet
+- Comprehensive report generation with all tool data integration
+- Detailed port scan results table with state information
+- Web application fingerprinting section in reports
+- TLS/SSL analysis section with certificate details
+- Enhanced vulnerability findings with source attribution
+- Professional PDF generation with ReportLab fallback
+- WHOIS data display in both HTML and PDF reports
 
 ### Changed
-- Nothing yet
-
-### Deprecated
-- Nothing yet
-
-### Removed
-- Nothing yet
+- Enhanced report templates with comprehensive data sections
+- Improved PDF generation to include all tool findings
+- Updated report context to include web targets and TLS data
+- Enhanced progress tracking with better error handling
 
 ### Fixed
-- Nothing yet
+- WHOIS data not displaying in PDF reports
+- Missing tool data in report generation
+- Incomplete report context for web fingerprinting and TLS analysis
+- ReportLab PDF generation missing comprehensive data
 
 ### Security
-- Nothing yet
+- Enhanced timeout protection for all external tools
+- Improved error handling for failed tool executions
+- Better resource management during concurrent scanning
 
 ## [1.0.0] - 2024-09-15
 
