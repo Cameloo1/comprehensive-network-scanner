@@ -107,30 +107,62 @@ th,td{border:1px solid #ddd;padding:.4rem} .badge{padding:.2rem .5rem;border-rad
 </tbody></table>
 {% endif %}
 
-{% if h.tls and (h.tls.testssl_json or h.tls.sslyze) %}
 <h3>TLS/SSL Analysis</h3>
-{% if h.tls.sslyze and not h.tls.sslyze.error %}
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>
-{% if h.tls.sslyze.certificate_subject %}
-<tr><td><strong>Certificate Subject</strong></td><td>{{ h.tls.sslyze.certificate_subject }}</td></tr>
-{% endif %}
-{% if h.tls.sslyze.certificate_issuer %}
-<tr><td><strong>Certificate Issuer</strong></td><td>{{ h.tls.sslyze.certificate_issuer }}</td></tr>
-{% endif %}
-{% if h.tls.sslyze.certificate_valid is defined %}
-<tr><td><strong>Certificate Valid</strong></td><td><span class="badge {% if h.tls.sslyze.certificate_valid %}high{% else %}critical{% endif %}">{{ h.tls.sslyze.certificate_valid }}</span></td></tr>
-{% endif %}
-{% if h.tls.sslyze.supported_tls_versions %}
-<tr><td><strong>Supported TLS Versions</strong></td><td>{{ h.tls.sslyze.supported_tls_versions|join(', ') }}</td></tr>
-{% endif %}
-{% if h.tls.sslyze.total_cipher_suites %}
-<tr><td><strong>Total Cipher Suites</strong></td><td>{{ h.tls.sslyze.total_cipher_suites }}</td></tr>
-{% endif %}
+<table><thead><tr><th>Tool</th><th>Status</th><th>Details</th></tr></thead><tbody>
+<tr>
+  <td><strong>SSLyze</strong></td>
+  <td>
+    {% if h.tls.sslyze and not h.tls.sslyze.error %}
+      <span class="badge high">Success</span>
+    {% else %}
+      <span class="badge info">Failed</span>
+    {% endif %}
+  </td>
+  <td>
+    {% if h.tls.sslyze and not h.tls.sslyze.error %}
+      {% if h.tls.sslyze.certificate_subject %}Subject: {{ h.tls.sslyze.certificate_subject[:50] }}...{% endif %}
+      {% if h.tls.sslyze.supported_tls_versions %} | TLS: {{ h.tls.sslyze.supported_tls_versions|join(', ') }}{% endif %}
+      {% if h.tls.sslyze.total_cipher_suites %} | Ciphers: {{ h.tls.sslyze.total_cipher_suites }}{% endif %}
+    {% else %}
+      {{ h.tls.sslyze.error if h.tls.sslyze else 'Not performed' }}
+    {% endif %}
+  </td>
+</tr>
+<tr>
+  <td><strong>TestSSL</strong></td>
+  <td>
+    {% if h.tls.testssl_json %}
+      <span class="badge high">Success</span>
+    {% else %}
+      <span class="badge info">Not performed</span>
+    {% endif %}
+  </td>
+  <td>
+    {% if h.tls.testssl_json %}
+      TLS configuration analyzed (detailed data available)
+    {% else %}
+      No open HTTPS ports or tool failed
+    {% endif %}
+  </td>
+</tr>
+<tr>
+  <td><strong>Target Ports</strong></td>
+  <td>
+    {% if h.tls.open_ports %}
+      <span class="badge high">Found</span>
+    {% else %}
+      <span class="badge info">None</span>
+    {% endif %}
+  </td>
+  <td>
+    {% if h.tls.open_ports %}
+      Analyzed: {% for port in h.tls.open_ports %}{{ port.port }}/{{ port.service }}{% if not loop.last %}, {% endif %}{% endfor %}
+    {% else %}
+      No open HTTPS ports found for analysis
+    {% endif %}
+  </td>
+</tr>
 </tbody></table>
-{% else %}
-<p><em>TLS analysis not available or failed: {{ h.tls.sslyze.error if h.tls.sslyze else 'No data' }}</em></p>
-{% endif %}
-{% endif %}
 
 <h3>Vulnerability Findings</h3>
 <table><thead><tr><th>Severity</th><th>Source</th><th>Title</th><th>Evidence</th><th>Fix</th></tr></thead><tbody>
