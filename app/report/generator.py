@@ -123,6 +123,34 @@ def build_context(scan_id:str):
                 "source": "nuclei"
             })
         
+        # Add tool status information
+        tool_status = {
+            "nuclei": {
+                "status": "Success" if findings else "No findings",
+                "details": f"Found {len(findings)} vulnerabilities" if findings else "No vulnerabilities detected"
+            },
+            "whatweb": {
+                "status": "Success" if web_data and any(wt.get('fingerprint', {}).get('error') is None for wt in web_data) else "No web services",
+                "details": f"Analyzed {len(web_data)} web targets" if web_data else "No HTTP/HTTPS ports found"
+            },
+            "sslyze": {
+                "status": "Success" if tls_data.get('sslyze') and not tls_data['sslyze'].get('error') else "Not performed",
+                "details": "TLS analysis completed" if tls_data.get('sslyze') and not tls_data['sslyze'].get('error') else "No open HTTPS ports found"
+            },
+            "testssl": {
+                "status": "Success" if tls_data.get('testssl_json') else "Not performed",
+                "details": "TLS configuration analyzed" if tls_data.get('testssl_json') else "No open HTTPS ports found"
+            },
+            "whois": {
+                "status": "Success" if whois_data and not whois_data.get('error') else "Failed",
+                "details": "Network information retrieved" if whois_data and not whois_data.get('error') else "WHOIS lookup failed"
+            },
+            "reverse_dns": {
+                "status": "Success" if h.rdns else "No record",
+                "details": f"Resolved to {h.rdns}" if h.rdns else "No reverse DNS record found"
+            }
+        }
+        
         ctx_hosts.append({
             "ip": h.ip, 
             "rdns": h.rdns or "No reverse DNS record found",
@@ -130,7 +158,8 @@ def build_context(scan_id:str):
             "tls": tls_data,
             "ports": [dict(port=p.port, proto=p.proto, service=p.service, version=p.version, state=p.state) for p in ports],
             "findings": findings_data,
-            "web_targets": web_data
+            "web_targets": web_data,
+            "tool_status": tool_status
         })
     s.close()
     return {"scan": scan, "hosts": ctx_hosts, "totals": totals}
@@ -407,6 +436,45 @@ def make_report(scan_id:str):
                 ('FONTSIZE', (0, 1), (-1, -1), 8)
             ]))
             story.append(tls_table)
+            story.append(Spacer(1, 6))
+            
+            # Add tool status summary
+            story.append(Paragraph("Tool Status Summary:", styles['Heading3']))
+            story.append(Spacer(1, 3))
+            
+            tool_status_data = [['Tool', 'Status', 'Details']]
+            tool_status = host.get('tool_status', {})
+            
+            tools = [
+                ('Nuclei (Vulnerability Scanner)', 'nuclei'),
+                ('WhatWeb (Web Fingerprinting)', 'whatweb'),
+                ('SSLyze (TLS Analysis)', 'sslyze'),
+                ('TestSSL (TLS Analysis)', 'testssl'),
+                ('WHOIS (Network Information)', 'whois'),
+                ('Reverse DNS', 'reverse_dns')
+            ]
+            
+            for tool_name, tool_key in tools:
+                status_info = tool_status.get(tool_key, {'status': 'Unknown', 'details': 'No data available'})
+                tool_status_data.append([
+                    tool_name,
+                    status_info['status'],
+                    status_info['details']
+                ])
+            
+            tool_status_table = Table(tool_status_data, colWidths=[200, 100, 220])
+            tool_status_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 9),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('FONTSIZE', (0, 1), (-1, -1), 8)
+            ]))
+            story.append(tool_status_table)
             story.append(Spacer(1, 6))
             
             # Add findings with table

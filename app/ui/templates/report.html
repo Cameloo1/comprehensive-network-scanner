@@ -164,6 +164,40 @@ th,td{border:1px solid #ddd;padding:.4rem} .badge{padding:.2rem .5rem;border-rad
 </tr>
 </tbody></table>
 
+<h3>Tool Status Summary</h3>
+<table><thead><tr><th>Tool</th><th>Status</th><th>Details</th></tr></thead><tbody>
+<tr>
+  <td><strong>Nuclei (Vulnerability Scanner)</strong></td>
+  <td><span class="badge {% if h.tool_status.nuclei.status == 'Success' %}high{% else %}info{% endif %}">{{ h.tool_status.nuclei.status }}</span></td>
+  <td>{{ h.tool_status.nuclei.details }}</td>
+</tr>
+<tr>
+  <td><strong>WhatWeb (Web Fingerprinting)</strong></td>
+  <td><span class="badge {% if h.tool_status.whatweb.status == 'Success' %}high{% else %}info{% endif %}">{{ h.tool_status.whatweb.status }}</span></td>
+  <td>{{ h.tool_status.whatweb.details }}</td>
+</tr>
+<tr>
+  <td><strong>SSLyze (TLS Analysis)</strong></td>
+  <td><span class="badge {% if h.tool_status.sslyze.status == 'Success' %}high{% else %}info{% endif %}">{{ h.tool_status.sslyze.status }}</span></td>
+  <td>{{ h.tool_status.sslyze.details }}</td>
+</tr>
+<tr>
+  <td><strong>TestSSL (TLS Analysis)</strong></td>
+  <td><span class="badge {% if h.tool_status.testssl.status == 'Success' %}high{% else %}info{% endif %}">{{ h.tool_status.testssl.status }}</span></td>
+  <td>{{ h.tool_status.testssl.details }}</td>
+</tr>
+<tr>
+  <td><strong>WHOIS (Network Information)</strong></td>
+  <td><span class="badge {% if h.tool_status.whois.status == 'Success' %}high{% else %}info{% endif %}">{{ h.tool_status.whois.status }}</span></td>
+  <td>{{ h.tool_status.whois.details }}</td>
+</tr>
+<tr>
+  <td><strong>Reverse DNS</strong></td>
+  <td><span class="badge {% if h.tool_status.reverse_dns.status == 'Success' %}high{% else %}info{% endif %}">{{ h.tool_status.reverse_dns.status }}</span></td>
+  <td>{{ h.tool_status.reverse_dns.details }}</td>
+</tr>
+</tbody></table>
+
 <h3>Vulnerability Findings</h3>
 <table><thead><tr><th>Severity</th><th>Source</th><th>Title</th><th>Evidence</th><th>Fix</th></tr></thead><tbody>
 {% for f in h.findings %}
