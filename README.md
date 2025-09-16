@@ -32,13 +32,14 @@ A comprehensive, automated network penetration testing tool designed for securit
 - **Export Options**: JSON and CSV export capabilities
 
 ### Comprehensive Reporting
-- **Port Scan Results**: Detailed tables with port states, services, and versions
+- **Port Scan Results**: Detailed tables with color-coded port states (open=red, closed=orange, filtered=blue)
+- **Target IPs Summary**: Overview table showing total ports found with open port breakdown
 - **WHOIS Information**: Complete network ownership and contact details
 - **Web Application Analysis**: Technology fingerprinting and HTTP response analysis
 - **TLS/SSL Analysis**: Certificate validation, supported protocols, and cipher suites
 - **Vulnerability Findings**: Source-attributed findings with severity levels and remediation
 - **Executive Summary**: High-level overview with vulnerability counts and recommendations
-- **Professional Formatting**: Clean HTML and PDF reports suitable for client delivery
+- **Professional Formatting**: Clean HTML and PDF reports with enhanced typography and visual hierarchy
 
 ## Quick Start
 

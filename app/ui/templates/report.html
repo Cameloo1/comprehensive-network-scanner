@@ -2,6 +2,7 @@
 <style>
 body{font-family:system-ui,Arial;margin:2rem}
 h1,h2{margin:.2rem 0} table{border-collapse:collapse;width:100%}
+.host-header{font-size:1.3em;font-weight:bold}
 th,td{border:1px solid #ddd;padding:.4rem} .badge{padding:.2rem .5rem;border-radius:.3rem}
 .critical{background:#5c0000;color:#fff}.high{background:#9b1c1c;color:#fff}
 .medium{background:#b7791f;color:#fff}.low{background:#2b6cb0;color:#fff}.info{background:#4a5568;color:#fff}
@@ -17,8 +18,35 @@ th,td{border:1px solid #ddd;padding:.4rem} .badge{padding:.2rem .5rem;border-rad
   <span class="badge info">Info: {{ totals.info }}</span>
 </p>
 
+<h2>Target IPs Scanned</h2>
+<table><thead><tr><th>IP Address</th><th>Reverse DNS</th><th>Ports Found</th><th>Findings</th></tr></thead><tbody>
 {% for h in hosts %}
-<h2>Host: {{ h.ip }} {% if h.rdns %}({{ h.rdns }}){% endif %}</h2>
+<tr>
+  <td>{{ h.ip }}</td>
+  <td>{{ h.rdns or 'No RDNS' }}</td>
+  <td>
+    {% set total_ports = h.ports|length %}
+    {% set open_ports = h.ports|selectattr('state', 'equalto', 'open')|list|length %}
+    {% if total_ports > 0 %}
+      {{ total_ports }} total ({{ open_ports }} open)
+    {% else %}
+      No ports found
+    {% endif %}
+  </td>
+  <td>
+    {% set findings_count = h.findings|length %}
+    {% if findings_count > 0 %}
+      {{ findings_count }} findings
+    {% else %}
+      No findings
+    {% endif %}
+  </td>
+</tr>
+{% endfor %}
+</tbody></table>
+
+{% for h in hosts %}
+<h2 class="host-header">Host: {{ h.ip }} {% if h.rdns %}({{ h.rdns }}){% endif %}</h2>
 
 <h3>Port Scan Results</h3>
 <table><thead><tr><th>Port</th><th>Protocol</th><th>Service</th><th>Version</th><th>State</th></tr></thead><tbody>
@@ -29,7 +57,7 @@ th,td{border:1px solid #ddd;padding:.4rem} .badge{padding:.2rem .5rem;border-rad
   <td>{{ p.proto }}</td>
   <td>{{ p.service or 'unknown' }}</td>
   <td>{{ p.version or 'N/A' }}</td>
-  <td><span class="badge {% if p.state == 'open' %}high{% else %}info{% endif %}">{{ p.state }}</span></td>
+  <td><span class="badge {% if p.state == 'open' %}high{% elif p.state == 'closed' %}medium{% elif p.state == 'filtered' %}low{% else %}info{% endif %}">{{ p.state }}</span></td>
 </tr>
 {% endfor %}
 {% else %}

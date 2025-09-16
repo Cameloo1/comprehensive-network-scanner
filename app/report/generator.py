@@ -97,55 +97,149 @@ def make_report(scan_id:str):
             # Create PDF with ReportLab
             doc = SimpleDocTemplate(pdf_path, pagesize=letter)
             styles = getSampleStyleSheet()
+            
+            # Create custom style for host headers (30% bigger than Heading2)
+            host_header_style = styles['Heading2'].clone('HostHeader')
+            host_header_style.fontSize = int(styles['Heading2'].fontSize * 1.3)
+            
             story = []
             
             # Parse HTML content and convert to PDF
-            title = f"Scan Report {scan_id}"
+            title = "Comprehensive Penetration Test Report"
             story.append(Paragraph(title, styles['Title']))
             story.append(Spacer(1, 12))
             
-            # Add basic scan information
-            story.append(Paragraph(f"<b>Target:</b> {ctx['scan'].target}", styles['Normal']))
-            story.append(Paragraph(f"<b>Safe Mode:</b> {ctx['scan'].safe_mode}", styles['Normal']))
-            story.append(Spacer(1, 12))
-            
-            # Add executive summary
+            # Add executive summary with professional formatting
             story.append(Paragraph("Executive Summary", styles['Heading2']))
-            summary = f"High: {ctx['totals']['high']}, Medium: {ctx['totals']['medium']}, Low: {ctx['totals']['low']}, Info: {ctx['totals']['info']}"
-            story.append(Paragraph(summary, styles['Normal']))
+            story.append(Spacer(1, 6))
+            
+            # Scan overview section
+            story.append(Paragraph("Scan Overview:", styles['Heading3']))
+            story.append(Paragraph(f" Total IPs Scanned: {len(ctx['hosts'])}", styles['Normal']))
+            story.append(Paragraph(f" Scan Sessions: 1", styles['Normal']))
+            story.append(Paragraph(f" Safe Mode: {'Enabled' if ctx['scan'].safe_mode else 'Disabled'}", styles['Normal']))
+            story.append(Paragraph(f" Scan Period: {ctx['scan'].started.strftime('%Y-%m-%d %H:%M')} to {ctx['scan'].started.strftime('%Y-%m-%d %H:%M')}", styles['Normal']))
+            story.append(Spacer(1, 6))
+            
+            # Vulnerability summary
+            story.append(Paragraph("Vulnerability Summary:", styles['Heading3']))
+            story.append(Paragraph(f" High: {ctx['totals']['high']}", styles['Normal']))
+            story.append(Paragraph(f" Medium: {ctx['totals']['medium']}", styles['Normal']))
+            story.append(Paragraph(f" Low: {ctx['totals']['low']}", styles['Normal']))
+            story.append(Paragraph(f" Info: {ctx['totals']['info']}", styles['Normal']))
             story.append(Spacer(1, 12))
             
-            # Add host information
+            # Target IPs summary table
+            story.append(Paragraph("Target IPs Scanned:", styles['Heading2']))
+            story.append(Spacer(1, 6))
+            
+            # Create a simple table for target summary
+            from reportlab.platypus import Table, TableStyle
+            from reportlab.lib import colors
+            
+            table_data = [['IP Address', 'Reverse DNS', 'Ports Found', 'Findings']]
             for host in ctx['hosts']:
-                story.append(Paragraph(f"Host: {host['ip']}", styles['Heading2']))
+                total_ports = len(host['ports'])
+                open_ports = len([p for p in host['ports'] if p['state'] == 'open'])
+                findings_count = len(host['findings'])
+                
+                rdns = host['rdns'] or 'No RDNS'
+                if total_ports > 0:
+                    ports_text = f"{total_ports} total ({open_ports} open)"
+                else:
+                    ports_text = "No ports found"
+                findings_text = f"{findings_count} findings" if findings_count > 0 else "No findings"
+                
+                table_data.append([host['ip'], rdns, ports_text, findings_text])
+            
+            target_table = Table(table_data, colWidths=[120, 200, 100, 100])
+            target_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 10),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black)
+            ]))
+            story.append(target_table)
+            story.append(Spacer(1, 20))
+            
+            # Add detailed host information
+            for host in ctx['hosts']:
+                story.append(Paragraph(f"Host: {host['ip']}", host_header_style))
                 if host['rdns']:
                     story.append(Paragraph(f"Reverse DNS: {host['rdns']}", styles['Normal']))
+                story.append(Spacer(1, 6))
                 
-                # Add port scan results
+                # Add port scan results with table
                 if host['ports']:
                     story.append(Paragraph("Port Scan Results:", styles['Heading3']))
+                    story.append(Spacer(1, 3))
+                    
+                    # Create port scan table
+                    port_data = [['Port', 'Protocol', 'Service', 'Version', 'State']]
                     for p in host['ports']:
-                        port_text = f"Port {p['port']}/{p['proto']}: {p['service'] or 'unknown'}"
-                        if p['version']:
-                            port_text += f" ({p['version']})"
-                        port_text += f" - {p['state']}"
-                        story.append(Paragraph(port_text, styles['Normal']))
+                        port_data.append([
+                            str(p['port']),
+                            p['proto'],
+                            p['service'] or 'unknown',
+                            p['version'] or 'N/A',
+                            p['state']
+                        ])
+                    
+                    port_table = Table(port_data, colWidths=[60, 60, 100, 120, 60])
+                    port_table.setStyle(TableStyle([
+                        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+                        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                        ('FONTSIZE', (0, 0), (-1, 0), 9),
+                        ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+                        ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+                        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                        ('FONTSIZE', (0, 1), (-1, -1), 8)
+                    ]))
+                    story.append(port_table)
+                    story.append(Spacer(1, 6))
                 else:
                     story.append(Paragraph("No ports found", styles['Normal']))
+                    story.append(Spacer(1, 6))
                 
-                # Add WHOIS information
+                # Add WHOIS information with table
                 if host.get('whois') and host['whois'].get('network'):
                     story.append(Paragraph("WHOIS Information:", styles['Heading3']))
-                    whois = host['whois']
-                    story.append(Paragraph(f"<b>Organization:</b> {whois.get('network', {}).get('name', 'N/A')}", styles['Normal']))
-                    story.append(Paragraph(f"<b>ASN:</b> {whois.get('asn', 'N/A')} ({whois.get('asn_description', 'N/A')})", styles['Normal']))
-                    story.append(Paragraph(f"<b>Country:</b> {whois.get('asn_country_code', 'N/A')}", styles['Normal']))
-                    story.append(Paragraph(f"<b>CIDR:</b> {whois.get('asn_cidr', 'N/A')}", styles['Normal']))
-                    story.append(Paragraph(f"<b>Network Range:</b> {whois.get('network', {}).get('start_address', 'N/A')} - {whois.get('network', {}).get('end_address', 'N/A')}", styles['Normal']))
+                    story.append(Spacer(1, 3))
                     
-                    # Add contact information
+                    whois = host['whois']
+                    whois_data = [
+                        ['Field', 'Value'],
+                        ['Organization', whois.get('network', {}).get('name', 'N/A')],
+                        ['ASN', f"{whois.get('asn', 'N/A')} ({whois.get('asn_description', 'N/A')})"],
+                        ['Country', whois.get('asn_country_code', 'N/A')],
+                        ['CIDR', whois.get('asn_cidr', 'N/A')],
+                        ['Network Range', f"{whois.get('network', {}).get('start_address', 'N/A')} - {whois.get('network', {}).get('end_address', 'N/A')}"]
+                    ]
+                    
+                    whois_table = Table(whois_data, colWidths=[120, 300])
+                    whois_table.setStyle(TableStyle([
+                        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+                        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                        ('FONTSIZE', (0, 0), (-1, 0), 9),
+                        ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+                        ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+                        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                        ('FONTSIZE', (0, 1), (-1, -1), 8)
+                    ]))
+                    story.append(whois_table)
+                    story.append(Spacer(1, 6))
+                    
+                    # Add contact information if available
                     if whois.get('objects'):
-                        story.append(Paragraph("Contacts:", styles['Heading4']))
+                        story.append(Paragraph("Contact Information:", styles['Heading4']))
                         for obj_key, obj in whois['objects'].items():
                             if obj.get('contact'):
                                 contact = obj['contact']
@@ -156,49 +250,109 @@ def make_report(scan_id:str):
                                 if contact.get('phone'):
                                     phone = contact['phone'][0]['value'] if contact['phone'] else 'N/A'
                                     story.append(Paragraph(f"  Phone: {phone}", styles['Normal']))
+                        story.append(Spacer(1, 6))
                 
-                # Add web fingerprinting data
+                # Add web fingerprinting data with table
                 if host.get('web_targets'):
                     story.append(Paragraph("Web Application Fingerprinting:", styles['Heading3']))
+                    story.append(Spacer(1, 3))
+                    
+                    web_data = [['URL', 'Technologies Detected']]
                     for wt in host['web_targets']:
-                        story.append(Paragraph(f"URL: {wt['url']}", styles['Normal']))
                         if wt['fingerprint'].get('plugins'):
                             plugins = ", ".join(wt['fingerprint']['plugins'])
-                            story.append(Paragraph(f"  Technologies: {plugins}", styles['Normal']))
                         else:
                             status = wt['fingerprint'].get('status_code', 'N/A')
-                            story.append(Paragraph(f"  Basic HTTP response ({status})", styles['Normal']))
+                            plugins = f"Basic HTTP response ({status})"
+                        web_data.append([wt['url'], plugins])
+                    
+                    web_table = Table(web_data, colWidths=[200, 220])
+                    web_table.setStyle(TableStyle([
+                        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+                        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                        ('FONTSIZE', (0, 0), (-1, 0), 9),
+                        ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+                        ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+                        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                        ('FONTSIZE', (0, 1), (-1, -1), 8)
+                    ]))
+                    story.append(web_table)
+                    story.append(Spacer(1, 6))
                 
-                # Add TLS analysis data
+                # Add TLS analysis data with table
                 if host.get('tls') and (host['tls'].get('testssl_json') or host['tls'].get('sslyze')):
                     story.append(Paragraph("TLS/SSL Analysis:", styles['Heading3']))
+                    story.append(Spacer(1, 3))
+                    
                     tls = host['tls']
                     if tls.get('sslyze') and not tls['sslyze'].get('error'):
                         sslyze = tls['sslyze']
+                        tls_data = [['Field', 'Value']]
+                        
                         if sslyze.get('certificate_subject'):
-                            story.append(Paragraph(f"Certificate Subject: {sslyze['certificate_subject']}", styles['Normal']))
+                            tls_data.append(['Certificate Subject', str(sslyze['certificate_subject'])[:100]])
                         if sslyze.get('certificate_issuer'):
-                            story.append(Paragraph(f"Certificate Issuer: {sslyze['certificate_issuer']}", styles['Normal']))
+                            tls_data.append(['Certificate Issuer', str(sslyze['certificate_issuer'])[:100]])
                         if 'certificate_valid' in sslyze:
                             valid = "Valid" if sslyze['certificate_valid'] else "Invalid"
-                            story.append(Paragraph(f"Certificate Valid: {valid}", styles['Normal']))
+                            tls_data.append(['Certificate Valid', valid])
                         if sslyze.get('supported_tls_versions'):
                             versions = ", ".join(sslyze['supported_tls_versions'])
-                            story.append(Paragraph(f"Supported TLS Versions: {versions}", styles['Normal']))
+                            tls_data.append(['Supported TLS Versions', versions])
                         if sslyze.get('total_cipher_suites'):
-                            story.append(Paragraph(f"Total Cipher Suites: {sslyze['total_cipher_suites']}", styles['Normal']))
+                            tls_data.append(['Total Cipher Suites', str(sslyze['total_cipher_suites'])])
+                        
+                        if len(tls_data) > 1:  # More than just header
+                            tls_table = Table(tls_data, colWidths=[150, 270])
+                            tls_table.setStyle(TableStyle([
+                                ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+                                ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+                                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                ('FONTSIZE', (0, 0), (-1, 0), 9),
+                                ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+                                ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+                                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                                ('FONTSIZE', (0, 1), (-1, -1), 8)
+                            ]))
+                            story.append(tls_table)
+                        else:
+                            story.append(Paragraph("No TLS data available", styles['Normal']))
                     else:
                         error = tls.get('sslyze', {}).get('error', 'No data') if tls.get('sslyze') else 'No data'
                         story.append(Paragraph(f"TLS analysis not available: {error}", styles['Normal']))
+                    story.append(Spacer(1, 6))
                 
-                # Add findings
+                # Add findings with table
                 if host['findings']:
                     story.append(Paragraph("Vulnerability Findings:", styles['Heading3']))
+                    story.append(Spacer(1, 3))
+                    
+                    findings_data = [['Severity', 'Source', 'Title', 'Evidence']]
                     for finding in host['findings']:
-                        finding_text = f"{finding['severity'].upper()} ({finding.get('source', 'unknown').upper()}): {finding['name']}"
-                        story.append(Paragraph(finding_text, styles['Normal']))
-                        if finding.get('evidence'):
-                            story.append(Paragraph(f"  Evidence: {finding['evidence']}", styles['Normal']))
+                        evidence = finding.get('evidence', 'N/A')[:100] if finding.get('evidence') else 'N/A'
+                        findings_data.append([
+                            finding['severity'].upper(),
+                            finding.get('source', 'unknown').upper(),
+                            finding['name'][:80],
+                            evidence
+                        ])
+                    
+                    findings_table = Table(findings_data, colWidths=[80, 80, 200, 160])
+                    findings_table.setStyle(TableStyle([
+                        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+                        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                        ('FONTSIZE', (0, 0), (-1, 0), 9),
+                        ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+                        ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+                        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                        ('FONTSIZE', (0, 1), (-1, -1), 8)
+                    ]))
+                    story.append(findings_table)
                 else:
                     story.append(Paragraph("No vulnerability findings", styles['Normal']))
                 

@@ -15,18 +15,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced vulnerability findings with source attribution
 - Professional PDF generation with ReportLab fallback
 - WHOIS data display in both HTML and PDF reports
+- Target IPs Scanned summary table in both HTML and PDF reports
+- Color-coded port state indicators (open=red, closed=orange, filtered=blue, other=gray)
 
 ### Changed
 - Enhanced report templates with comprehensive data sections
 - Improved PDF generation to include all tool findings
 - Updated report context to include web targets and TLS data
 - Enhanced progress tracking with better error handling
+- Port state display now shows all states with appropriate visual indicators
+- Target summary table shows total ports found with open port count
+- Host headers are 30% larger and bold for better visibility
 
 ### Fixed
 - WHOIS data not displaying in PDF reports
 - Missing tool data in report generation
 - Incomplete report context for web fingerprinting and TLS analysis
 - ReportLab PDF generation missing comprehensive data
+- Port states only showing as "open" or "info" - now properly displays filtered, closed, etc.
+- Target IPs table only showing open ports - now shows total ports with breakdown
 
 ### Security
 - Enhanced timeout protection for all external tools
