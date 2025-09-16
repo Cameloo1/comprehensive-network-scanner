@@ -22,6 +22,30 @@ th,td{border:1px solid #ddd;padding:.4rem} .badge{padding:.2rem .5rem;border-rad
 <p><strong>Open Ports:</strong>
 {% if h.ports %}{% for p in h.ports %}{{p.port}}/{{p.proto}} {{p.service}}{% if p.version %} ({{p.version}}){% endif %}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}None{% endif %}</p>
 
+{% if h.whois and h.whois.network %}
+<h3>WHOIS Information</h3>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>
+<tr><td><strong>Organization</strong></td><td>{{ h.whois.network.name or 'N/A' }}</td></tr>
+<tr><td><strong>ASN</strong></td><td>{{ h.whois.asn or 'N/A' }} ({{ h.whois.asn_description or 'N/A' }})</td></tr>
+<tr><td><strong>Country</strong></td><td>{{ h.whois.asn_country_code or 'N/A' }}</td></tr>
+<tr><td><strong>CIDR</strong></td><td>{{ h.whois.asn_cidr or 'N/A' }}</td></tr>
+<tr><td><strong>Network Range</strong></td><td>{{ h.whois.network.start_address or 'N/A' }} - {{ h.whois.network.end_address or 'N/A' }}</td></tr>
+{% if h.whois.objects %}
+{% for obj_key, obj in h.whois.objects.items() %}
+{% if obj.contact %}
+<tr><td><strong>Contact ({{ obj_key }})</strong></td><td>{{ obj.contact.name or 'N/A' }}</td></tr>
+{% if obj.contact.email %}
+<tr><td><strong>Email ({{ obj_key }})</strong></td><td>{{ obj.contact.email[0].value if obj.contact.email else 'N/A' }}</td></tr>
+{% endif %}
+{% if obj.contact.phone %}
+<tr><td><strong>Phone ({{ obj_key }})</strong></td><td>{{ obj.contact.phone[0].value if obj.contact.phone else 'N/A' }}</td></tr>
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endif %}
+</tbody></table>
+{% endif %}
+
 <h3>Findings</h3>
 <table><thead><tr><th>Severity</th><th>Title</th><th>Evidence</th><th>Fix</th></tr></thead><tbody>
 {% for f in h.findings %}

@@ -20,8 +20,17 @@ def build_context(scan_id:str):
         findings = s.query(Finding).filter_by(host_id=h.id).all()
         for f in findings:
             if f.severity in totals: totals[f.severity]+=1
+        # Parse WHOIS data if available
+        whois_data = {}
+        if h.whois_json:
+            try:
+                import json
+                whois_data = json.loads(h.whois_json)
+            except:
+                whois_data = {}
+        
         ctx_hosts.append({
-            "ip": h.ip, "rdns": h.rdns,
+            "ip": h.ip, "rdns": h.rdns, "whois": whois_data,
             "ports": [dict(port=p.port, proto=p.proto, service=p.service, version=p.version) for p in ports],
             "findings": [dict(severity=f.severity, name=f.name, evidence=f.evidence, remediation=f.remediation) for f in findings]
         })
