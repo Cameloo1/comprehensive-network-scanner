@@ -11,6 +11,7 @@ class Scan(Base):
     __tablename__ = "scans"
     id = Column(String, primary_key=True)
     started = Column(DateTime, default=datetime.utcnow)
+    finished = Column(DateTime, nullable=True)
     target = Column(String)
     safe_mode = Column(Boolean, default=True)
     summary_high = Column(Integer, default=0)

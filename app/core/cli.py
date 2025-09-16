@@ -59,13 +59,19 @@ def run_concurrent_scan(scan_id: str, ips: list[str], safe_mode: bool, max_worke
         # Update scan totals after all concurrent scans complete
         update_scan_totals(scan_id)
         
+        # Update scan with finished time
+        scan.finished = datetime.datetime.utcnow()
+        sess.add(scan)
+        sess.commit()
+        
         # Generate consolidated result file
         result_path = f"runs/{scan_id}.json"
         with open(result_path, "w") as f:
             json.dump({
                 "scan_id": scan_id, 
                 "targets": ips, 
-                "started": datetime.datetime.utcnow().isoformat() + "Z", 
+                "started": scan.started.isoformat() + "Z", 
+                "finished": scan.finished.isoformat() + "Z",
                 "safe_mode": safe_mode,
                 "status": "completed",
                 "concurrent": True,
@@ -78,12 +84,18 @@ def run_concurrent_scan(scan_id: str, ips: list[str], safe_mode: bool, max_worke
         progress.target_failed("system_error")
         typer.echo(f"Error during concurrent scan: {e}", err=True)
         # Create error result file
+        # Update scan with finished time and error status
+        scan.finished = datetime.datetime.utcnow()
+        sess.add(scan)
+        sess.commit()
+        
         result_path = f"runs/{scan_id}.json"
         with open(result_path, "w") as f:
             json.dump({
                 "scan_id": scan_id, 
                 "targets": ips, 
-                "started": datetime.datetime.utcnow().isoformat() + "Z", 
+                "started": scan.started.isoformat() + "Z", 
+                "finished": scan.finished.isoformat() + "Z",
                 "safe_mode": safe_mode,
                 "status": "error",
                 "error": str(e),

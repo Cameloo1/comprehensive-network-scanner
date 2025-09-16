@@ -118,7 +118,10 @@ def make_report(scan_id:str):
             story.append(Paragraph(f" Total IPs Scanned: {len(ctx['hosts'])}", styles['Normal']))
             story.append(Paragraph(f" Scan Sessions: 1", styles['Normal']))
             story.append(Paragraph(f" Safe Mode: {'Enabled' if ctx['scan'].safe_mode else 'Disabled'}", styles['Normal']))
-            story.append(Paragraph(f" Scan Period: {ctx['scan'].started.strftime('%Y-%m-%d %H:%M')} to {ctx['scan'].started.strftime('%Y-%m-%d %H:%M')}", styles['Normal']))
+            # Format scan period using actual scan times
+            scan_start_time = ctx['scan'].started
+            scan_end_time = ctx['scan'].finished if ctx['scan'].finished else datetime.datetime.utcnow()
+            story.append(Paragraph(f" Scan Period: {scan_start_time.strftime('%Y-%m-%d %H:%M UTC')} to {scan_end_time.strftime('%Y-%m-%d %H:%M UTC')}", styles['Normal']))
             story.append(Spacer(1, 6))
             
             # Vulnerability summary

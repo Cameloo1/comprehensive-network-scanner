@@ -99,13 +99,19 @@ def run_tcp_scan(scan_id: str, ips: List[str], safe_mode: bool) -> str:
             if returncode != 0:
                 print(f"Warning: Nmap scan for {ip} returned code {returncode}: {stderr}")
         
+        # Update scan with finished time
+        scan.finished = datetime.datetime.utcnow()
+        sess.add(scan)
+        sess.commit()
+        
         # Generate result file
         result_path = f"runs/{scan_id}.json"
         with open(result_path, "w") as f:
             json.dump({
                 "scan_id": scan_id, 
                 "targets": ips, 
-                "started": datetime.datetime.utcnow().isoformat() + "Z", 
+                "started": scan.started.isoformat() + "Z", 
+                "finished": scan.finished.isoformat() + "Z",
                 "safe_mode": safe_mode,
                 "status": "completed"
             }, f, indent=2)
@@ -114,13 +120,19 @@ def run_tcp_scan(scan_id: str, ips: List[str], safe_mode: bool) -> str:
         
     except Exception as e:
         print(f"Error during scan: {e}")
+        # Update scan with finished time and error status
+        scan.finished = datetime.datetime.utcnow()
+        sess.add(scan)
+        sess.commit()
+        
         # Still create result file with error status
         result_path = f"runs/{scan_id}.json"
         with open(result_path, "w") as f:
             json.dump({
                 "scan_id": scan_id, 
                 "targets": ips, 
-                "started": datetime.datetime.utcnow().isoformat() + "Z", 
+                "started": scan.started.isoformat() + "Z", 
+                "finished": scan.finished.isoformat() + "Z",
                 "safe_mode": safe_mode,
                 "status": "error",
                 "error": str(e)

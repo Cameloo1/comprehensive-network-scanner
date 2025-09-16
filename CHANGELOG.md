@@ -34,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ReportLab PDF generation missing comprehensive data
 - Port states only showing as "open" or "info" - now properly displays filtered, closed, etc.
 - Target IPs table only showing open ports - now shows total ports with breakdown
+- Scan time display issues - now shows correct start and end times with UTC timezone
+- Database schema updated to track scan completion times
 
 ### Security
 - Enhanced timeout protection for all external tools
