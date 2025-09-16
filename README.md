@@ -336,19 +336,34 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 The authors and contributors are not responsible for any misuse of this tool.
 
-- Tools Used
-Nmap, Nuclei, SSLyze, WhatWeb, FastAPI, Typer
+## Tools Used
+- **Nmap**: Network discovery and security auditing
+- **Nuclei**: Vulnerability scanner with community templates
+- **SSLyze**: Fast SSL/TLS configuration analyzer
+- **WhatWeb**: Web technology identifier
+- **FastAPI**: Modern web framework for building APIs
+- **Typer**: Great developer experience for CLI applications
 
-Roadmap
-Upcoming Features
+## Recent Improvements
+- **Enhanced Port State Display**: Color-coded indicators for open (red), closed (orange), filtered (blue) ports
+- **Target Summary Table**: Overview showing total ports found with open port breakdown
+- **Improved Typography**: 30% larger host headers for better readability
+- **Professional Reporting**: Enhanced HTML and PDF formatting with visual hierarchy
+- **Comprehensive Data Integration**: All tool findings consolidated into unified reports
+
+## Roadmap
+### Upcoming Features
 - [ ] Additional vulnerability scanners
 - [ ] Custom report templates
 - [ ] Integration with SIEM platforms
 - [ ] Automated remediation suggestions
+- [ ] Web-based dashboard interface
+- [ ] Multi-user support with role-based access
 
-Version History
+## Version History
 - **v1.0.0**: Initial release with core scanning capabilities
 - **v1.1.0**: Added progress tracking and worker configuration
 - **v1.2.0**: Enhanced reporting and API improvements
+- **v1.3.0**: Improved port state display and report formatting
 
 
