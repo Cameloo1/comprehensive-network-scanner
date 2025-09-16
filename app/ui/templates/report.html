@@ -19,8 +19,23 @@ th,td{border:1px solid #ddd;padding:.4rem} .badge{padding:.2rem .5rem;border-rad
 
 {% for h in hosts %}
 <h2>Host: {{ h.ip }} {% if h.rdns %}({{ h.rdns }}){% endif %}</h2>
-<p><strong>Open Ports:</strong>
-{% if h.ports %}{% for p in h.ports %}{{p.port}}/{{p.proto}} {{p.service}}{% if p.version %} ({{p.version}}){% endif %}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}None{% endif %}</p>
+
+<h3>Port Scan Results</h3>
+<table><thead><tr><th>Port</th><th>Protocol</th><th>Service</th><th>Version</th><th>State</th></tr></thead><tbody>
+{% if h.ports %}
+{% for p in h.ports %}
+<tr>
+  <td>{{ p.port }}</td>
+  <td>{{ p.proto }}</td>
+  <td>{{ p.service or 'unknown' }}</td>
+  <td>{{ p.version or 'N/A' }}</td>
+  <td><span class="badge {% if p.state == 'open' %}high{% else %}info{% endif %}">{{ p.state }}</span></td>
+</tr>
+{% endfor %}
+{% else %}
+<tr><td colspan="5">No ports found</td></tr>
+{% endif %}
+</tbody></table>
 
 {% if h.whois and h.whois.network %}
 <h3>WHOIS Information</h3>
@@ -46,17 +61,61 @@ th,td{border:1px solid #ddd;padding:.4rem} .badge{padding:.2rem .5rem;border-rad
 </tbody></table>
 {% endif %}
 
-<h3>Findings</h3>
-<table><thead><tr><th>Severity</th><th>Title</th><th>Evidence</th><th>Fix</th></tr></thead><tbody>
+{% if h.web_targets %}
+<h3>Web Application Fingerprinting</h3>
+<table><thead><tr><th>URL</th><th>Technologies Detected</th></tr></thead><tbody>
+{% for wt in h.web_targets %}
+<tr>
+  <td>{{ wt.url }}</td>
+  <td>
+    {% if wt.fingerprint.plugins %}
+      {% for plugin in wt.fingerprint.plugins %}{{ plugin }}{% if not loop.last %}, {% endif %}{% endfor %}
+    {% else %}
+      Basic HTTP response ({{ wt.fingerprint.get('status_code', 'N/A') }})
+    {% endif %}
+  </td>
+</tr>
+{% endfor %}
+</tbody></table>
+{% endif %}
+
+{% if h.tls and (h.tls.testssl_json or h.tls.sslyze) %}
+<h3>TLS/SSL Analysis</h3>
+{% if h.tls.sslyze and not h.tls.sslyze.error %}
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>
+{% if h.tls.sslyze.certificate_subject %}
+<tr><td><strong>Certificate Subject</strong></td><td>{{ h.tls.sslyze.certificate_subject }}</td></tr>
+{% endif %}
+{% if h.tls.sslyze.certificate_issuer %}
+<tr><td><strong>Certificate Issuer</strong></td><td>{{ h.tls.sslyze.certificate_issuer }}</td></tr>
+{% endif %}
+{% if h.tls.sslyze.certificate_valid is defined %}
+<tr><td><strong>Certificate Valid</strong></td><td><span class="badge {% if h.tls.sslyze.certificate_valid %}high{% else %}critical{% endif %}">{{ h.tls.sslyze.certificate_valid }}</span></td></tr>
+{% endif %}
+{% if h.tls.sslyze.supported_tls_versions %}
+<tr><td><strong>Supported TLS Versions</strong></td><td>{{ h.tls.sslyze.supported_tls_versions|join(', ') }}</td></tr>
+{% endif %}
+{% if h.tls.sslyze.total_cipher_suites %}
+<tr><td><strong>Total Cipher Suites</strong></td><td>{{ h.tls.sslyze.total_cipher_suites }}</td></tr>
+{% endif %}
+</tbody></table>
+{% else %}
+<p><em>TLS analysis not available or failed: {{ h.tls.sslyze.error if h.tls.sslyze else 'No data' }}</em></p>
+{% endif %}
+{% endif %}
+
+<h3>Vulnerability Findings</h3>
+<table><thead><tr><th>Severity</th><th>Source</th><th>Title</th><th>Evidence</th><th>Fix</th></tr></thead><tbody>
 {% for f in h.findings %}
 <tr>
   <td><span class="badge {{ f.severity }}">{{ f.severity|capitalize }}</span></td>
+  <td><span class="badge info">{{ f.source|upper }}</span></td>
   <td>{{ f.name }}</td>
   <td>{{ f.evidence }}</td>
   <td>{{ f.remediation }}</td>
 </tr>
 {% else %}
-<tr><td colspan="4">No findings.</td></tr>
+<tr><td colspan="5">No findings.</td></tr>
 {% endfor %}
 </tbody></table>
 {% endfor %}
