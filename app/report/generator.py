@@ -384,98 +384,98 @@ def make_report(scan_id:str):
                     story.append(web_table)
                     story.append(Spacer(1, 6))
                 
-            # Add TLS analysis data with table
-            story.append(Paragraph("TLS/SSL Analysis:", styles['Heading3']))
-            story.append(Spacer(1, 3))
-            
-            tls = host.get('tls', {})
-            tls_data = [['Tool', 'Status', 'Details']]
-            
-            # SSLyze data
-            if tls.get('sslyze') and not tls['sslyze'].get('error'):
-                sslyze = tls['sslyze']
-                details = []
-                if sslyze.get('certificate_subject'):
-                    details.append(f"Subject: {str(sslyze['certificate_subject'])[:50]}...")
-                if sslyze.get('supported_tls_versions'):
-                    versions = ", ".join(sslyze['supported_tls_versions'])
-                    details.append(f"TLS Versions: {versions}")
-                if sslyze.get('total_cipher_suites'):
-                    details.append(f"Cipher Suites: {sslyze['total_cipher_suites']}")
+                # Add TLS analysis data with table
+                story.append(Paragraph("TLS/SSL Analysis:", styles['Heading3']))
+                story.append(Spacer(1, 3))
                 
-                status = "Success" if details else "No data"
-                details_text = "; ".join(details) if details else "Analysis completed but no detailed data available"
-                tls_data.append(['SSLyze', status, details_text])
-            else:
-                error = tls.get('sslyze', {}).get('error', 'Not performed') if tls.get('sslyze') else 'Not performed'
-                tls_data.append(['SSLyze', 'Failed', error])
+                tls = host.get('tls', {})
+                tls_data = [['Tool', 'Status', 'Details']]
+                
+                # SSLyze data
+                if tls.get('sslyze') and not tls['sslyze'].get('error'):
+                    sslyze = tls['sslyze']
+                    details = []
+                    if sslyze.get('certificate_subject'):
+                        details.append(f"Subject: {str(sslyze['certificate_subject'])[:50]}...")
+                    if sslyze.get('supported_tls_versions'):
+                        versions = ", ".join(sslyze['supported_tls_versions'])
+                        details.append(f"TLS Versions: {versions}")
+                    if sslyze.get('total_cipher_suites'):
+                        details.append(f"Cipher Suites: {sslyze['total_cipher_suites']}")
+                    
+                    status = "Success" if details else "No data"
+                    details_text = "; ".join(details) if details else "Analysis completed but no detailed data available"
+                    tls_data.append(['SSLyze', status, details_text])
+                else:
+                    error = tls.get('sslyze', {}).get('error', 'Not performed') if tls.get('sslyze') else 'Not performed'
+                    tls_data.append(['SSLyze', 'Failed', error])
+                
+                # TestSSL data
+                if tls.get('testssl_json'):
+                    tls_data.append(['TestSSL', 'Success', 'TLS configuration analyzed (detailed data available)'])
+                else:
+                    tls_data.append(['TestSSL', 'Not performed', 'No open HTTPS ports or tool failed'])
+                
+                # Open ports info
+                if tls.get('open_ports'):
+                    ports_info = ", ".join([f"{p['port']}/{p['service']}" for p in tls['open_ports']])
+                    tls_data.append(['Target Ports', 'Found', f"Analyzed: {ports_info}"])
+                else:
+                    tls_data.append(['Target Ports', 'None', 'No open HTTPS ports found for analysis'])
+                
+                tls_table = Table(tls_data, colWidths=[80, 80, 260])
+                tls_table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+                    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('FONTSIZE', (0, 0), (-1, 0), 9),
+                    ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+                    ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+                    ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                    ('FONTSIZE', (0, 1), (-1, -1), 8)
+                ]))
+                story.append(tls_table)
+                story.append(Spacer(1, 6))
             
-            # TestSSL data
-            if tls.get('testssl_json'):
-                tls_data.append(['TestSSL', 'Success', 'TLS configuration analyzed (detailed data available)'])
-            else:
-                tls_data.append(['TestSSL', 'Not performed', 'No open HTTPS ports or tool failed'])
-            
-            # Open ports info
-            if tls.get('open_ports'):
-                ports_info = ", ".join([f"{p['port']}/{p['service']}" for p in tls['open_ports']])
-                tls_data.append(['Target Ports', 'Found', f"Analyzed: {ports_info}"])
-            else:
-                tls_data.append(['Target Ports', 'None', 'No open HTTPS ports found for analysis'])
-            
-            tls_table = Table(tls_data, colWidths=[80, 80, 260])
-            tls_table.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0, 0), (-1, 0), 9),
-                ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
-                ('BACKGROUND', (0, 1), (-1, -1), colors.white),
-                ('GRID', (0, 0), (-1, -1), 1, colors.black),
-                ('FONTSIZE', (0, 1), (-1, -1), 8)
-            ]))
-            story.append(tls_table)
-            story.append(Spacer(1, 6))
-            
-            # Add tool status summary
-            story.append(Paragraph("Tool Status Summary:", styles['Heading3']))
-            story.append(Spacer(1, 3))
-            
-            tool_status_data = [['Tool', 'Status', 'Details']]
-            tool_status = host.get('tool_status', {})
-            
-            tools = [
-                ('Nuclei (Vulnerability Scanner)', 'nuclei'),
-                ('WhatWeb (Web Fingerprinting)', 'whatweb'),
-                ('SSLyze (TLS Analysis)', 'sslyze'),
-                ('TestSSL (TLS Analysis)', 'testssl'),
-                ('WHOIS (Network Information)', 'whois'),
-                ('Reverse DNS', 'reverse_dns')
-            ]
-            
-            for tool_name, tool_key in tools:
-                status_info = tool_status.get(tool_key, {'status': 'Unknown', 'details': 'No data available'})
-                tool_status_data.append([
-                    tool_name,
-                    status_info['status'],
-                    status_info['details']
-                ])
-            
-            tool_status_table = Table(tool_status_data, colWidths=[200, 100, 220])
-            tool_status_table.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0, 0), (-1, 0), 9),
-                ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
-                ('BACKGROUND', (0, 1), (-1, -1), colors.white),
-                ('GRID', (0, 0), (-1, -1), 1, colors.black),
-                ('FONTSIZE', (0, 1), (-1, -1), 8)
-            ]))
-            story.append(tool_status_table)
-            story.append(Spacer(1, 6))
+                # Add tool status summary
+                story.append(Paragraph("Tool Status Summary:", styles['Heading3']))
+                story.append(Spacer(1, 3))
+                
+                tool_status_data = [['Tool', 'Status', 'Details']]
+                tool_status = host.get('tool_status', {})
+                
+                tools = [
+                    ('Nuclei (Vulnerability Scanner)', 'nuclei'),
+                    ('WhatWeb (Web Fingerprinting)', 'whatweb'),
+                    ('SSLyze (TLS Analysis)', 'sslyze'),
+                    ('TestSSL (TLS Analysis)', 'testssl'),
+                    ('WHOIS (Network Information)', 'whois'),
+                    ('Reverse DNS', 'reverse_dns')
+                ]
+                
+                for tool_name, tool_key in tools:
+                    status_info = tool_status.get(tool_key, {'status': 'Unknown', 'details': 'No data available'})
+                    tool_status_data.append([
+                        tool_name,
+                        status_info['status'],
+                        status_info['details']
+                    ])
+                
+                tool_status_table = Table(tool_status_data, colWidths=[200, 100, 220])
+                tool_status_table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+                    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('FONTSIZE', (0, 0), (-1, 0), 9),
+                    ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+                    ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+                    ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                    ('FONTSIZE', (0, 1), (-1, -1), 8)
+                ]))
+                story.append(tool_status_table)
+                story.append(Spacer(1, 6))
             
             # Add findings with table
             if host['findings']:
@@ -509,7 +509,8 @@ def make_report(scan_id:str):
                 story.append(Paragraph("No vulnerability findings", styles['Normal']))
             
             story.append(Spacer(1, 12))
-            
+        
+            # Build the complete PDF document
             doc.build(story)
             return {"html": html_path, "pdf": pdf_path}
             
