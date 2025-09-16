@@ -1,20 +1,20 @@
-# 🔍 Evolve NetScan
+# NetScan
 
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Security](https://img.shields.io/badge/security-penetration--testing-red.svg)](https://github.com/yourusername/evolve-netscan)
+[![Security](https://img.shields.io/badge/security-penetration--testing-red.svg)](https://github.com/yourusername/netscan)
 
-A comprehensive, automated network penetration testing tool designed for security professionals and ethical hackers. Evolve NetScan combines multiple industry-standard tools into a unified platform with real-time progress tracking, comprehensive reporting, and concurrent scanning capabilities.
+A comprehensive, automated network penetration testing tool designed for security professionals and ethical hackers. NetScan combines multiple industry-standard tools into a unified platform with real-time progress tracking, comprehensive reporting, and concurrent scanning capabilities.
 
-## ✨ Features
+## Features
 
-### 🔧 **Core Capabilities**
+### Core Capabilities
 - **Multi-Target Scanning**: Support for single IPs, CIDR ranges, and comma-separated target lists
 - **Concurrent Processing**: Configurable worker threads (1-32) for optimal performance
 - **Real-Time Progress Tracking**: Live progress bars with ETA calculations and worker monitoring
 - **Comprehensive Reporting**: HTML and PDF reports with detailed vulnerability analysis
 
-### 🛠️ **Integrated Tools**
+### Integrated Tools
 - **Nmap**: Port scanning and service enumeration
 - **WhatWeb**: Web application fingerprinting (with Python fallback)
 - **Nuclei**: Safe vulnerability scanning with timeout protection
@@ -22,14 +22,14 @@ A comprehensive, automated network penetration testing tool designed for securit
 - **TestSSL**: Additional SSL/TLS testing
 - **Custom Reconnaissance**: Reverse DNS, WHOIS, and DNS record analysis
 
-### 📊 **Advanced Features**
+### Advanced Features
 - **Safe Mode**: Non-destructive scanning with safe vulnerability templates
 - **Timeout Protection**: Prevents hanging on filtered/unresponsive targets
 - **Database Storage**: SQLite database for scan result persistence
 - **API Interface**: RESTful API for integration with other tools
 - **Export Options**: JSON and CSV export capabilities
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -88,7 +88,7 @@ netscan scan 1.1.1.1,2.2.2.2,3.3.3.3 --safe --workers 4
 netscan scan 1.1.1.1,2.2.2.2,3.3.3.3 --safe -w 4
 ```
 
-## 📋 Command Reference
+## Command Reference
 
 ### Scan Command
 ```bash
@@ -133,7 +133,7 @@ netscan summary <scan_id>
 netscan help
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 ```bash
@@ -154,20 +154,20 @@ For non-lab targets, create an `AUTHORIZATION.txt` file:
 # This file allows scanning of external targets
 ```
 
-## 📊 Progress Tracking
+## Progress Tracking
 
-Evolve NetScan features a comprehensive progress tracking system:
+NetScan features a comprehensive progress tracking system:
 
 ```
-🔄 Progress: [████████████████████████░░░░░░]  80.0% | Completed: 4/5 | Active Workers: 1/2 | Failed: 0 | ETA: 0:00:57
+Progress: [████████████████████████░░░░░░]  80.0% | Completed: 4/5 | Active Workers: 1/2 | Failed: 0 | ETA: 0:00:57
 
-✅ Scan Complete!
-   📊 Total Targets: 5
-   ✅ Completed: 5
-   ❌ Failed: 0
-   📈 Success Rate: 100.0%
-   ⏱️  Total Time: 0:03:49
-   ⚡ Avg Time/Target: 0:00:45
+Scan Complete!
+   Total Targets: 5
+   Completed: 5
+   Failed: 0
+   Success Rate: 100.0%
+   Total Time: 0:03:49
+   Avg Time/Target: 0:00:45
 ```
 
 ### Progress Features
@@ -177,7 +177,7 @@ Evolve NetScan features a comprehensive progress tracking system:
 - **Failure tracking** for failed targets
 - **Final summary** with success rates and timing
 
-## 📄 Report Generation
+## Report Generation
 
 ### HTML Reports
 - Interactive web-based reports
@@ -199,10 +199,10 @@ Evolve NetScan features a comprehensive progress tracking system:
 - **TLS Analysis**: SSL/TLS configuration assessment
 - **Web Fingerprinting**: Application and service identification
 
-## 🛡️ Security Considerations
+## Security Considerations
 
 ### Safe Mode
-Evolve NetScan operates in safe mode by default, which:
+NetScan operates in safe mode by default, which:
 - Uses only non-destructive vulnerability templates
 - Implements timeout protection to prevent hanging
 - Avoids aggressive scanning techniques
@@ -220,7 +220,7 @@ Evolve NetScan operates in safe mode by default, which:
 4. **Monitor resource usage** with large scans
 5. **Review reports carefully** before taking action
 
-## 🔧 API Usage
+## API Usage
 
 ### Starting the API Server
 ```bash
@@ -249,7 +249,7 @@ GET /scan/{scan_id}
 GET /report/{scan_id}
 ```
 
-## 🧪 Testing
+## Testing
 
 ### Run Tests
 ```bash
@@ -269,7 +269,7 @@ pytest --cov=app
 - API endpoint testing
 - Report generation validation
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 evolve-netscan/
@@ -288,7 +288,7 @@ evolve-netscan/
 └── LICENSE                # MIT License
 ```
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
@@ -309,11 +309,11 @@ pip install -e ".[dev]"
 pytest
 ```
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## ⚠️ Legal Disclaimer
+## Legal Disclaimer
 
 **IMPORTANT**: This tool is for authorized penetration testing and security research only. Users are responsible for:
 
@@ -324,7 +324,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 The authors and contributors are not responsible for any misuse of this tool.
 
-## 🆘 Support
+## Support
 
 ### Getting Help
 - **Documentation**: Check this README and inline help (`netscan help`)
@@ -384,6 +384,6 @@ which nuclei
 
 ---
 
-**Made with ❤️ by the Evolve Security Team**
+**Made with ❤️ by Wasif Amin**
 
-For more information, visit our [GitHub repository](https://github.com/yourusername/evolve-netscan).
+For more information, visit our [GitHub repository](https://github.com/yourusername/netscan).

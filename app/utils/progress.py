@@ -58,7 +58,7 @@ class ScanProgress:
                 eta = "calculating..."
             
             # Clear line and print progress
-            print(f"\r\033[K🔄 Progress: [{bar}] {progress_percent:5.1f}% | "
+            print(f"\r\033[KProgress: [{bar}] {progress_percent:5.1f}% | "
                   f"Completed: {self.completed_targets}/{self.total_targets} | "
                   f"Active Workers: {self.active_workers}/{self.max_workers} | "
                   f"Failed: {self.failed_targets} | "
@@ -104,13 +104,13 @@ class ScanProgress:
         print()  # New line after progress bar
         
         summary = self.get_summary()
-        print(f"\n✅ Scan Complete!")
-        print(f"   📊 Total Targets: {summary['total_targets']}")
-        print(f"   ✅ Completed: {summary['completed'] - summary['failed']}")
-        print(f"   ❌ Failed: {summary['failed']}")
-        print(f"   📈 Success Rate: {summary['success_rate']:.1f}%")
-        print(f"   ⏱️  Total Time: {summary['total_time']}")
-        print(f"   ⚡ Avg Time/Target: {summary['avg_time_per_target']}")
+        print(f"\nScan Complete!")
+        print(f"   Total Targets: {summary['total_targets']}")
+        print(f"   Completed: {summary['completed'] - summary['failed']}")
+        print(f"   Failed: {summary['failed']}")
+        print(f"   Success Rate: {summary['success_rate']:.1f}%")
+        print(f"   Total Time: {summary['total_time']}")
+        print(f"   Avg Time/Target: {summary['avg_time_per_target']}")
         print()
 
 class ProgressManager:

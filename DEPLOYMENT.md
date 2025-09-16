@@ -1,6 +1,6 @@
-# 🚀 Deployment Guide
+# Deployment Guide
 
-This guide provides comprehensive instructions for deploying Evolve NetScan in various environments.
+This guide provides comprehensive instructions for deploying NetScan in various environments.
 
 ## 📋 Prerequisites
 
@@ -22,8 +22,8 @@ This guide provides comprehensive instructions for deploying Evolve NetScan in v
 #### Windows
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/evolve-netscan.git
-cd evolve-netscan
+git clone https://github.com/yourusername/netscan.git
+cd netscan
 
 # Run the Windows installer
 install.bat
@@ -32,8 +32,8 @@ install.bat
 #### Linux/macOS
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/evolve-netscan.git
-cd evolve-netscan
+git clone https://github.com/yourusername/netscan.git
+cd netscan
 
 # Make installer executable and run
 chmod +x install.sh
@@ -44,8 +44,8 @@ chmod +x install.sh
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/evolve-netscan.git
-cd evolve-netscan
+git clone https://github.com/yourusername/netscan.git
+cd netscan
 
 # Create virtual environment
 python -m venv venv
@@ -66,7 +66,7 @@ pip install -e .
 ### Method 3: Direct pip Install
 
 ```bash
-pip install git+https://github.com/yourusername/evolve-netscan.git
+pip install git+https://github.com/yourusername/netscan.git
 ```
 
 ## 🌐 Production Deployment
@@ -108,10 +108,10 @@ CMD ["python", "-m", "app.api.server"]
 Build and run:
 ```bash
 # Build the image
-docker build -t evolve-netscan .
+docker build -t netscan .
 
 # Run the container
-docker run -p 8000:8000 -v $(pwd)/data:/app/data evolve-netscan
+docker run -p 8000:8000 -v $(pwd)/data:/app/data netscan
 ```
 
 ### Cloud Deployment
@@ -130,8 +130,8 @@ docker run -p 8000:8000 -v $(pwd)/data:/app/data evolve-netscan
 
 3. **Deploy Application**
    ```bash
-   git clone https://github.com/yourusername/evolve-netscan.git
-   cd evolve-netscan
+   git clone https://github.com/yourusername/netscan.git
+   cd netscan
    python3 -m venv venv
    source venv/bin/activate
    pip install -r requirements.txt
@@ -140,7 +140,7 @@ docker run -p 8000:8000 -v $(pwd)/data:/app/data evolve-netscan
 
 4. **Configure Systemd Service**
    ```bash
-   sudo nano /etc/systemd/system/evolve-netscan.service
+   sudo nano /etc/systemd/system/netscan.service
    ```
    ```ini
    [Unit]
@@ -150,9 +150,9 @@ docker run -p 8000:8000 -v $(pwd)/data:/app/data evolve-netscan
    [Service]
    Type=simple
    User=ubuntu
-   WorkingDirectory=/home/ubuntu/evolve-netscan
-   Environment=PATH=/home/ubuntu/evolve-netscan/venv/bin
-   ExecStart=/home/ubuntu/evolve-netscan/venv/bin/python -m app.api.server
+   WorkingDirectory=/home/ubuntu/netscan
+   Environment=PATH=/home/ubuntu/netscan/venv/bin
+   ExecStart=/home/ubuntu/netscan/venv/bin/python -m app.api.server
    Restart=always
 
    [Install]
@@ -162,8 +162,8 @@ docker run -p 8000:8000 -v $(pwd)/data:/app/data evolve-netscan
 5. **Start Service**
    ```bash
    sudo systemctl daemon-reload
-   sudo systemctl enable evolve-netscan
-   sudo systemctl start evolve-netscan
+   sudo systemctl enable netscan
+   sudo systemctl start netscan
    ```
 
 #### Google Cloud Platform
@@ -199,7 +199,7 @@ docker run -p 8000:8000 -v $(pwd)/data:/app/data evolve-netscan
 ### Environment Variables
 ```bash
 # Database configuration
-export NETSAN_DB_PATH=/opt/evolve-netscan/data/netscan.db
+export NETSAN_DB_PATH=/opt/netscan/data/netscan.db
 
 # Default settings
 export NETSAN_DEFAULT_WORKERS=8
@@ -216,7 +216,7 @@ export NETSAN_API_WORKERS=4
 Create `config.yaml`:
 ```yaml
 database:
-  path: "/opt/evolve-netscan/data/netscan.db"
+  path: "/opt/netscan/data/netscan.db"
   backup_interval: 86400  # 24 hours
 
 scanning:
@@ -276,7 +276,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('evolve-netscan.log'),
+        logging.FileHandler('netscan.log'),
         logging.StreamHandler()
     ]
 )
@@ -309,8 +309,8 @@ async def metrics():
 ```bash
 # Create backup script
 #!/bin/bash
-BACKUP_DIR="/opt/evolve-netscan/backups"
-DB_PATH="/opt/evolve-netscan/data/netscan.db"
+BACKUP_DIR="/opt/netscan/backups"
+DB_PATH="/opt/netscan/data/netscan.db"
 DATE=$(date +%Y%m%d_%H%M%S)
 
 mkdir -p $BACKUP_DIR
@@ -320,13 +320,13 @@ sqlite3 $DB_PATH ".backup $BACKUP_DIR/netscan_$DATE.db"
 ### Automated Backups
 ```bash
 # Add to crontab
-0 2 * * * /opt/evolve-netscan/scripts/backup.sh
+0 2 * * * /opt/netscan/scripts/backup.sh
 ```
 
 ### Recovery Process
 ```bash
 # Restore from backup
-sqlite3 /opt/evolve-netscan/data/netscan.db < backup_file.sql
+sqlite3 /opt/netscan/data/netscan.db < backup_file.sql
 ```
 
 ## 🚀 Performance Optimization
@@ -364,7 +364,7 @@ server {
 #### Installation Issues
 ```bash
 # Permission errors
-sudo chown -R $USER:$USER /opt/evolve-netscan
+sudo chown -R $USER:$USER /opt/netscan
 
 # Missing dependencies
 pip install --upgrade pip setuptools wheel
@@ -373,7 +373,7 @@ pip install --upgrade pip setuptools wheel
 #### Runtime Issues
 ```bash
 # Check logs
-tail -f evolve-netscan.log
+tail -f netscan.log
 
 # Verify installation
 python -c "import app.core.cli; print('OK')"

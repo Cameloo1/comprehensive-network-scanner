@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Evolve NetScan Installation Script
-# This script installs Evolve NetScan and its dependencies
+# NetScan Installation Script
+# This script installs NetScan and its dependencies
 
 set -e  # Exit on any error
 
-echo "🔍 Evolve NetScan Installation Script"
-echo "====================================="
+echo "NetScan Installation Script"
+echo "============================"
 
 # Check Python version
 echo "📋 Checking Python version..."
@@ -63,10 +63,10 @@ else
 fi
 
 # Install the package in development mode
-echo "📋 Installing Evolve NetScan..."
+echo "📋 Installing NetScan..."
 if [ -f "setup.py" ]; then
     $PIP_CMD install -e .
-    echo "✅ Evolve NetScan installed in development mode"
+    echo "✅ NetScan installed in development mode"
 else
     echo "❌ setup.py not found"
     exit 1
@@ -74,9 +74,7 @@ fi
 
 # Check installation
 echo "📋 Verifying installation..."
-if command -v evolve-netscan &> /dev/null; then
-    echo "✅ evolve-netscan command available"
-elif command -v netscan &> /dev/null; then
+if command -v netscan &> /dev/null; then
     echo "✅ netscan command available"
 else
     echo "❌ Installation verification failed"
@@ -98,21 +96,21 @@ else
 fi
 
 echo ""
-echo "🎉 Installation completed successfully!"
+echo "Installation completed successfully!"
 echo ""
-echo "📋 Next steps:"
+echo "Next steps:"
 echo "1. Activate the virtual environment: source venv/bin/activate"
 echo "2. Run a test scan: netscan scan 127.0.0.1 --safe"
 echo "3. Get help: netscan help"
 echo ""
-echo "📚 Documentation:"
+echo "Documentation:"
 echo "- README.md: Complete usage guide"
 echo "- CONTRIBUTING.md: Development guidelines"
-echo "- GitHub: https://github.com/yourusername/evolve-netscan"
+echo "- GitHub: https://github.com/yourusername/netscan"
 echo ""
-echo "⚠️  Important:"
+echo "Important:"
 echo "- Always obtain proper authorization before scanning targets"
 echo "- Use safe mode for production environments"
 echo "- Review the legal disclaimer in README.md"
 echo ""
-echo "Happy scanning! 🔍"
+echo "Happy scanning!"

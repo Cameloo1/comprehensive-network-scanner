@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2024-09-15
 
 ### Added
-- Initial release of Evolve NetScan
+- Initial release of NetScan
 - **Core Scanning Engine**
   - Multi-target scanning support (single IP, CIDR, comma-separated lists)
   - Concurrent scanning with configurable worker threads (1-32)

@@ -3,11 +3,11 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "evolve-netscan"
+name = "netscan"
 version = "1.0.0"
 description = "A comprehensive network penetration testing tool"
 authors = [
-    {name = "Evolve Security Team", email = "security@evolve.com"},
+    {name = "Wasif Amin", email = "wasif.amin@example.com"},
 ]
 readme = "README.md"
 license = {text = "MIT"}
@@ -47,7 +47,6 @@ dev = [
 ]
 
 [project.scripts]
-evolve-netscan = "app.core.cli:app"
 netscan = "app.core.cli:app"
 
 [tool.setuptools.packages.find]

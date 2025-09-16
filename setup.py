@@ -14,10 +14,10 @@ def read_requirements():
         return [line.strip() for line in fh if line.strip() and not line.startswith("#")]
 
 setup(
-    name="evolve-netscan",
+    name="netscan",
     version="1.0.0",
-    author="Evolve Security Team",
-    author_email="security@evolve.com",
+    author="Wasif Amin",
+    author_email="wasif.amin@example.com",
     description="A comprehensive network penetration testing tool with automated scanning and reporting capabilities",
     long_description=read_readme(),
     long_description_content_type="text/markdown",

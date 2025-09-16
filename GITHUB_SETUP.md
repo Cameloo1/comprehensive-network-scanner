@@ -1,6 +1,6 @@
-# 🚀 GitHub Setup Instructions
+# GitHub Setup Instructions
 
-This document provides step-by-step instructions for pushing Evolve NetScan to your GitHub repository.
+This document provides step-by-step instructions for pushing NetScan to your GitHub repository.
 
 ## 📋 Prerequisites
 
@@ -16,7 +16,7 @@ This document provides step-by-step instructions for pushing Evolve NetScan to y
 2. Click the "+" icon in the top right corner
 3. Select "New repository"
 4. Fill in the repository details:
-   - **Repository name**: `evolve-netscan`
+   - **Repository name**: `netscan`
    - **Description**: `A comprehensive network penetration testing tool with automated scanning and reporting capabilities`
    - **Visibility**: Choose Public or Private
    - **Initialize**: Do NOT initialize with README (we already have one)
@@ -28,7 +28,7 @@ Replace `yourusername` with your actual GitHub username:
 
 ```bash
 # Add your GitHub repository as remote origin
-git remote add origin https://github.com/yourusername/evolve-netscan.git
+git remote add origin https://github.com/yourusername/netscan.git
 
 # Verify the remote was added
 git remote -v
@@ -64,7 +64,7 @@ git push -u origin main
 2. **Configure the following**:
 
 #### General Settings
-- **Repository name**: `evolve-netscan`
+- **Repository name**: `netscan`
 - **Description**: `A comprehensive network penetration testing tool`
 - **Topics**: Add tags like `penetration-testing`, `network-security`, `vulnerability-scanning`, `nmap`, `nuclei`
 - **Website**: Leave blank or add documentation URL
@@ -208,7 +208,7 @@ Add PyPI installation instructions:
 ## Installation
 
 ```bash
-pip install evolve-netscan
+pip install netscan
 ```
 ```
 
@@ -253,6 +253,6 @@ Your Evolve NetScan repository is now fully configured and ready for:
 - **Deployment**: Production deployment with comprehensive guides
 - **Community**: Professional documentation and support channels
 
-**Repository URL**: `https://github.com/yourusername/evolve-netscan`
+**Repository URL**: `https://github.com/yourusername/netscan`
 
 Happy coding! 🔍

@@ -30,9 +30,9 @@ def run_tcp_scan(scan_id: str, ips: List[str], safe_mode: bool) -> str:
         # Use faster scan settings for localhost and lab networks
         for i, ip in enumerate(ips, 1):
             if len(ips) > 1:
-                typer.echo(f"🔍 Scanning {ip} ({i}/{len(ips)})")
+                typer.echo(f"Scanning {ip} ({i}/{len(ips)})")
             else:
-                typer.echo(f"🔍 Scanning {ip}")
+                typer.echo(f"Scanning {ip}")
             xml_path = f"runs/{scan_id}_{ip}.xml"
             
             # Optimize scan parameters based on target

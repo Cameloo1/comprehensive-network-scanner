@@ -1,9 +1,9 @@
 @echo off
-REM Evolve NetScan Installation Script for Windows
-REM This script installs Evolve NetScan and its dependencies
+REM NetScan Installation Script for Windows
+REM This script installs NetScan and its dependencies
 
-echo 🔍 Evolve NetScan Installation Script
-echo =====================================
+echo NetScan Installation Script
+echo ============================
 
 REM Check Python version
 echo 📋 Checking Python version...
@@ -58,10 +58,10 @@ if exist "requirements.txt" (
 )
 
 REM Install the package in development mode
-echo 📋 Installing Evolve NetScan...
+echo 📋 Installing NetScan...
 if exist "setup.py" (
     python -m pip install -e .
-    echo ✅ Evolve NetScan installed in development mode
+    echo ✅ NetScan installed in development mode
 ) else (
     echo ❌ setup.py not found
     pause
@@ -85,22 +85,22 @@ if not exist "reports" mkdir reports
 echo ✅ Directories created
 
 echo.
-echo 🎉 Installation completed successfully!
+echo Installation completed successfully!
 echo.
-echo 📋 Next steps:
+echo Next steps:
 echo 1. Activate the virtual environment: venv\Scripts\activate.bat
 echo 2. Run a test scan: netscan scan 127.0.0.1 --safe
 echo 3. Get help: netscan help
 echo.
-echo 📚 Documentation:
+echo Documentation:
 echo - README.md: Complete usage guide
 echo - CONTRIBUTING.md: Development guidelines
-echo - GitHub: https://github.com/yourusername/evolve-netscan
+echo - GitHub: https://github.com/yourusername/netscan
 echo.
-echo ⚠️  Important:
+echo Important:
 echo - Always obtain proper authorization before scanning targets
 echo - Use safe mode for production environments
 echo - Review the legal disclaimer in README.md
 echo.
-echo Happy scanning! 🔍
+echo Happy scanning!
 pause

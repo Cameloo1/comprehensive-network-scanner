@@ -32,7 +32,7 @@ def run_concurrent_scan(scan_id: str, ips: list[str], safe_mode: bool, max_worke
         sess.close()
     
     try:
-        typer.echo(f"🚀 Starting concurrent scan of {len(ips)} targets with {max_workers} workers...")
+        typer.echo(f"Starting concurrent scan of {len(ips)} targets with {max_workers} workers...")
         
         # Use ThreadPoolExecutor with configurable max_workers
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -51,7 +51,7 @@ def run_concurrent_scan(scan_id: str, ips: list[str], safe_mode: bool, max_worke
                     completed_scans.append(result_path)
                 except Exception as e:
                     progress.target_failed(ip)
-                    typer.echo(f"❌ Error scanning {ip}: {e}", err=True)
+                    typer.echo(f"Error scanning {ip}: {e}", err=True)
         
         # Print final summary
         progress.print_final_summary()
@@ -76,7 +76,7 @@ def run_concurrent_scan(scan_id: str, ips: list[str], safe_mode: bool, max_worke
         
     except Exception as e:
         progress.target_failed("system_error")
-        typer.echo(f"❌ Error during concurrent scan: {e}", err=True)
+        typer.echo(f"Error during concurrent scan: {e}", err=True)
         # Create error result file
         result_path = f"runs/{scan_id}.json"
         with open(result_path, "w") as f:
@@ -205,7 +205,7 @@ def scan(
     """Start a network scan of the specified target."""
     # Validate max_workers
     if max_workers < 1 or max_workers > 32:
-        typer.echo("❌ Error: max_workers must be between 1 and 32", err=True)
+        typer.echo("Error: max_workers must be between 1 and 32", err=True)
         raise typer.Exit(1)
     
     init_db()
@@ -217,10 +217,10 @@ def scan(
         path = run_concurrent_scan(scan_id, ips, safe, max_workers)
     else:
         # Single IP - use existing sequential scan
-        typer.echo(f"🔍 Scanning single target: {ips[0]}")
+        typer.echo(f"Scanning single target: {ips[0]}")
         path = run_tcp_scan(scan_id, ips, safe)
     
-    typer.echo(f"📄 Results saved to: {path}")
+    typer.echo(f"Results saved to: {path}")
 
 app = typer.Typer()
 
@@ -336,9 +336,9 @@ def summary(scan_id: str):
 def help():
     """Show detailed help and usage examples"""
     print("""
-🔍 Evolve NetScan - Network Penetration Testing Tool
+NetScan - Network Penetration Testing Tool
 
-📋 USAGE EXAMPLES:
+USAGE EXAMPLES:
 
 Single Target:
   python -m app.core.cli scan 192.168.1.1 --safe
@@ -355,18 +355,18 @@ Mixed Targets:
 With Custom Workers:
   python -m app.core.cli scan 1.1.1.1,2.2.2.2 --safe --workers 4
 
-⚙️ OPTIONS:
+OPTIONS:
   --safe/--no-safe    Enable safe mode (default: --safe)
   --workers, -w       Maximum concurrent workers (1-32, default: 8)
 
-📊 PROGRESS INDICATOR:
+PROGRESS INDICATOR:
   • Real-time progress bar showing completion percentage
   • Active worker count vs maximum workers
   • Failed target tracking
   • ETA calculation based on current performance
   • Final summary with success rate and timing
 
-📄 COMMANDS:
+COMMANDS:
   scan <target>       Start a network scan
   report <scan_id>    Generate HTML/PDF report
   summary <scan_id>   Show scan summary
