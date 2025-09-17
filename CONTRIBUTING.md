@@ -2,7 +2,7 @@
 
 Thank you for your interest in contributing to Evolve NetScan! This document provides guidelines and information for contributors.
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Python 3.8 or higher
@@ -79,7 +79,7 @@ test: add unit tests for progress tracking
    - Reference any related issues
    - Include screenshots for UI changes
 
-## 🧪 Testing
+## Testing
 
 ### Running Tests
 ```bash
@@ -108,7 +108,7 @@ def test_scan_single_ip():
     assert "ports" in result
 ```
 
-## 📝 Documentation
+## Documentation
 
 ### Code Documentation
 - Use docstrings for all functions and classes
@@ -139,7 +139,7 @@ def scan_target(target: str, safe_mode: bool = True) -> dict:
 - Include usage examples
 - Update installation instructions if needed
 
-## 🐛 Bug Reports
+## Bug Reports
 
 ### Before Submitting
 1. Check existing issues
@@ -171,7 +171,7 @@ What actually happens
 Any other relevant information
 ```
 
-## ✨ Feature Requests
+## Feature Requests
 
 ### Before Submitting
 1. Check existing feature requests
@@ -196,7 +196,7 @@ Other solutions you've considered
 Any other relevant information
 ```
 
-## 🔒 Security
+## Security
 
 ### Security Considerations
 - All contributions must maintain security best practices
@@ -226,7 +226,7 @@ If you discover a security vulnerability, please:
 3. Security review (if applicable)
 4. Final approval and merge
 
-## 🏷️ Release Process
+## Release Process
 
 ### Version Numbering
 We use [Semantic Versioning](https://semver.org/):
@@ -241,7 +241,7 @@ We use [Semantic Versioning](https://semver.org/):
 4. Build and test package
 5. Publish to PyPI
 
-## 🤝 Community Guidelines
+## Community Guidelines
 
 ### Code of Conduct
 - Be respectful and inclusive
@@ -255,17 +255,17 @@ We use [Semantic Versioning](https://semver.org/):
 - Ask questions in discussions
 - Be patient with responses
 
-## 📞 Contact
+## Contact
 
 - **Issues**: [GitHub Issues](https://github.com/yourusername/evolve-netscan/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/yourusername/evolve-netscan/discussions)
 - **Email**: security@evolve.com
 
-## 🙏 Recognition
+## Recognition
 
 Contributors will be:
 - Listed in CONTRIBUTORS.md
 - Mentioned in release notes
 - Given credit in documentation
 
-Thank you for contributing to Evolve NetScan! 🎉
+Thank you for contributing to NetScan!
