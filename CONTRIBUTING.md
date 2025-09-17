@@ -207,7 +207,7 @@ Any other relevant information
 ### Security Vulnerabilities
 If you discover a security vulnerability, please:
 1. **DO NOT** create a public issue
-2. Email security@evolve.com
+2. Email
 3. Include detailed reproduction steps
 4. Allow time for response before public disclosure
 
@@ -253,13 +253,6 @@ We use [Semantic Versioning](https://semver.org/):
 - Check documentation first
 - Search existing issues
 - Ask questions in discussions
-- Be patient with responses
-
-## Contact
-
-- **Issues**: [GitHub Issues](https://github.com/yourusername/evolve-netscan/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/evolve-netscan/discussions)
-- **Email**: security@evolve.com
 
 ## Recognition
 
