@@ -1,6 +1,6 @@
 # Contributing to NetScan
 
-Thank you for your interest in contributing to Evolve NetScan! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to NetScan! This document provides guidelines and information for contributors.
 
 ## Getting Started
 
