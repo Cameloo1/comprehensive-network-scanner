@@ -19,7 +19,13 @@ NC='\033[0m' # No Color
 test_python_version() {
     echo -n "Testing Python version... "
     PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
-    if (( $(echo "$PYTHON_VERSION >= 3.8" | bc -l) )); then
+    
+    # Extract major and minor version numbers
+    MAJOR=$(echo $PYTHON_VERSION | cut -d. -f1)
+    MINOR=$(echo $PYTHON_VERSION | cut -d. -f2)
+    
+    # Check if version is >= 3.8 (without using bc)
+    if [ "$MAJOR" -gt 3 ] || ([ "$MAJOR" -eq 3 ] && [ "$MINOR" -ge 8 ]); then
         echo -e "${GREEN}✓ Python $PYTHON_VERSION${NC}"
         return 0
     else

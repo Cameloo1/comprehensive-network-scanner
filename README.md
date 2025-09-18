@@ -56,6 +56,10 @@ For Kali Linux users, use the automated installation script:
 # Navigate to the project directory
 cd evolve-netscan
 
+# If you have system issues (dpkg errors, broken packages), run this first:
+chmod +x fix_kali_system.sh
+./fix_kali_system.sh
+
 # Run automated Kali installation
 chmod +x install_kali.sh
 ./install_kali.sh
@@ -64,6 +68,8 @@ chmod +x install_kali.sh
 chmod +x test_kali_install.sh
 ./test_kali_install.sh
 ```
+
+**Having installation issues?** Check the [Kali Troubleshooting Guide](KALI_TROUBLESHOOTING.md) for specific error solutions.
 
 #### Option 1: From Source (Recommended)
 ```bash
