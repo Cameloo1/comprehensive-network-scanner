@@ -10,13 +10,12 @@ authors = [
     {name = "Wasif Amin", email = "wasif.amin@example.com"},
 ]
 readme = "README.md"
-license = {text = "MIT"}
+license = "MIT"
 requires-python = ">=3.8"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Information Technology",
     "Topic :: Security",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -36,6 +35,7 @@ dependencies = [
     "weasyprint>=60.0",
     "reportlab>=4.0.0",
     "python-dateutil>=2.8.0",
+    "typing-extensions>=4.8.0",
 ]
 
 [project.optional-dependencies]
@@ -47,7 +47,7 @@ dev = [
 ]
 
 [project.scripts]
-netscan = "app.core.cli:app"
+netscan = "app.core.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]

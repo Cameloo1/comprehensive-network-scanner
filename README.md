@@ -1,10 +1,10 @@
-# NetScan
+# Evolve NetScan
 
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Security](https://img.shields.io/badge/security-penetration--testing-red.svg)](https://github.com/yourusername/netscan)
+[![Security](https://img.shields.io/badge/security-penetration--testing-red.svg)](https://github.com/yourusername/evolve-netscan)
 
-A comprehensive, automated network penetration testing tool designed for security professionals and ethical hackers. NetScan combines multiple industry-standard tools into a unified platform with real-time progress tracking, comprehensive reporting, and concurrent scanning capabilities.
+A comprehensive, automated network penetration testing tool designed for security professionals and ethical hackers. Evolve NetScan combines multiple industry-standard tools into a unified platform with real-time progress tracking, comprehensive reporting, and concurrent scanning capabilities.
 
 ## Features
 
@@ -43,29 +43,63 @@ A comprehensive, automated network penetration testing tool designed for securit
 
 ## Quick Start
 
+### Prerequisites
+- Python 3.8 or higher
+- pip (Python package installer)
+- For Kali Linux: System dependencies (handled by install script)
+
 ### Installation
+
+#### Kali Linux (Quick Install)
+For Kali Linux users, use the automated installation script:
+```bash
+# Navigate to the project directory
+cd evolve-netscan
+
+# Run automated Kali installation
+chmod +x install_kali.sh
+./install_kali.sh
+
+# Test installation
+chmod +x test_kali_install.sh
+./test_kali_install.sh
+```
 
 #### Option 1: From Source (Recommended)
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/evolve-netscan.git
+# Navigate to the project directory
 cd evolve-netscan
 
-# Install dependencies
-pip install -r requirements.txt
+# Install the package in development mode
+python -m pip install -e . --user
 
-# Install the package
-pip install -e .
+# Or with pip3 on Linux/macOS
+pip3 install -e . --user
 ```
 
-#### Option 2: Direct Installation
+#### Option 2: Manual Dependencies (if needed)
 ```bash
-pip install git+https://github.com/yourusername/evolve-netscan.git
+# Install dependencies first (usually not needed with -e .)
+python -m pip install -r requirements.txt --user
+
+# Then install the package
+python -m pip install -e . --user
 ```
 
-#### Option 3: Using pip with requirements
+### Quick Usage
+After installation, try these common commands:
 ```bash
-pip install -r requirements.txt
+# Test installation
+netscan --help
+
+# Scan a single target
+netscan scan 127.0.0.1 --safe
+
+# Start web interface
+netscan web-server
+
+# If 'netscan' command not found, use:
+python -m app.core.cli --help
 ```
 
 ### Basic Usage
@@ -73,10 +107,10 @@ pip install -r requirements.txt
 #### Single Target Scan
 ```bash
 # Scan a single IP
-evolve-netscan scan 192.168.1.1 --safe
-
-# Or use the short alias
 netscan scan 192.168.1.1 --safe
+
+# If command not found, use module form
+python -m app.core.cli scan 192.168.1.1 --safe
 ```
 
 #### Multiple Target Scan
@@ -139,10 +173,25 @@ netscan export-csv <scan_id>
 netscan summary <scan_id>
 ```
 
+### Web Server
+```bash
+# Start web interface
+netscan web-server
+
+# Start on custom port
+netscan web-server --port 8080
+```
+
 ### Help
 ```bash
 # Show detailed help
 netscan help
+
+# Show command help
+netscan --help
+
+# Show scan command help
+netscan scan --help
 ```
 
 ## Configuration
@@ -150,13 +199,13 @@ netscan help
 ### Environment Variables
 ```bash
 # Database location (optional)
-export NETSAN_DB_PATH=/path/to/netscan.db
+export NETSCAN_DB_PATH=/path/to/netscan.db
 
 # Default worker count (optional)
-export NETSAN_DEFAULT_WORKERS=8
+export NETSCAN_DEFAULT_WORKERS=8
 
 # Safe mode default (optional)
-export NETSAN_SAFE_MODE=true
+export NETSCAN_SAFE_MODE=true
 ```
 
 ### Authorization File
@@ -234,10 +283,16 @@ NetScan operates in safe mode by default, which:
 
 ## API Usage
 
-### Starting the API Server
+### Starting the Web Server
 ```bash
-# Start the API server
-python -m app.api.server
+# Start the web server using CLI
+netscan web-server
+
+# Or start with custom port
+netscan web-server --port 8080
+
+# Or using module form
+python -m app.core.cli web-server
 
 # Server will be available at http://localhost:8000
 ```
@@ -266,13 +321,14 @@ GET /report/{scan_id}
 ### Run Tests
 ```bash
 # Install development dependencies
-pip install -e ".[dev]"
+python -m pip install pytest pytest-asyncio --user
 
 # Run tests
-pytest
+python -m pytest
 
-# Run with coverage
-pytest --cov=app
+# Run specific test files
+python -m pytest tests/test_smoke.py
+python -m pytest tests/test_e2e.py
 ```
 
 ### Test Coverage
@@ -306,24 +362,81 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 ### Development Setup
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/evolve-netscan.git
+# Navigate to project directory
 cd evolve-netscan
 
-# Create virtual environment
+# Create virtual environment (optional but recommended)
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install in development mode
-pip install -e ".[dev]"
+python -m pip install -e . --user
+
+# Install development dependencies
+python -m pip install pytest pytest-asyncio black flake8 --user
 
 # Run tests
-pytest
+python -m pytest
 ```
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Troubleshooting
+
+### Common Installation Issues
+
+#### Command not found after installation
+```bash
+# Solution 1: Restart terminal and try again
+# Solution 2: Add to PATH manually
+export PATH="$HOME/.local/bin:$PATH"
+source ~/.bashrc
+
+# Solution 3: Use module form
+python -m app.core.cli --help
+```
+
+#### Cairo dependency errors (Linux)
+```bash
+# Install system dependencies
+sudo apt install libcairo2-dev libpango1.0-dev pkg-config python3-dev build-essential
+
+# On CentOS/RHEL
+sudo yum install cairo-devel pango-devel pkgconfig python3-devel gcc
+```
+
+#### Permission errors
+```bash
+# Use --user flag
+python -m pip install -e . --user
+
+# Or create virtual environment
+python -m venv venv
+source venv/bin/activate
+pip install -e .
+```
+
+#### Module import errors
+```bash
+# Ensure you're in the correct directory
+cd evolve-netscan
+
+# Check Python path
+python -c "import sys; print(sys.path)"
+
+# Try running directly
+python -m app.core.cli --help
+```
+
+### Getting Help
+
+If you encounter issues:
+1. Check the [KALI_INSTALL.md](KALI_INSTALL.md) for Kali Linux specific instructions
+2. Run the test script: `./test_kali_install.sh`
+3. Use the module form: `python -m app.core.cli --help`
+4. Check that all system dependencies are installed
 
 ## Legal Disclaimer
 

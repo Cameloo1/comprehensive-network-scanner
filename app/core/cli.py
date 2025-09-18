@@ -345,6 +345,22 @@ def summary(scan_id: str):
     print(f"Assessment Summary: Identified {t['high']} high, {t['medium']} medium, {t['low']} low, and {t['info']} informational issues across {len(ctx['hosts'])} host(s). Prioritize patching high-severity findings and hardening exposed services.")
 
 @app.command()
+def web_server(port: int = typer.Option(8000, "--port", "-p", help="Port to run the web server on")):
+    """Start the web server interface"""
+    try:
+        import uvicorn
+        from app.api.server import app as web_app
+        typer.echo(f"Starting web server on port {port}...")
+        typer.echo(f"Open your browser to: http://localhost:{port}")
+        uvicorn.run(web_app, host="0.0.0.0", port=port)
+    except ImportError:
+        typer.echo("Error: uvicorn not installed. Run: pip install uvicorn", err=True)
+        raise typer.Exit(1)
+    except Exception as e:
+        typer.echo(f"Error starting web server: {e}", err=True)
+        raise typer.Exit(1)
+
+@app.command()
 def help():
     """Show detailed help and usage examples"""
     print("""
@@ -380,10 +396,19 @@ PROGRESS INDICATOR:
 
 COMMANDS:
   scan <target>       Start a network scan
+  web-server          Start the web interface (default port: 8000)
   report <scan_id>    Generate HTML/PDF report
   summary <scan_id>   Show scan summary
+  export-json <id>    Export scan results as JSON
+  export-csv <id>     Export scan results as CSV
+  import-nessus       Import Nessus scan results
+  import-zap          Import ZAP scan results
   help               Show this help message
 """)
 
-if __name__ == "__main__":
+def main():
+    """Main entry point for the CLI application"""
     app()
+
+if __name__ == "__main__":
+    main()
