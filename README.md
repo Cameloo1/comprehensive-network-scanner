@@ -49,7 +49,7 @@ A comprehensive, automated network penetration testing tool designed for securit
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/evolve-netscan.git
-cd evolve-netscan
+cd netscan-master
 
 # Install dependencies
 pip install -r requirements.txt
@@ -73,7 +73,7 @@ pip install -r requirements.txt
 #### Single Target Scan
 ```bash
 # Scan a single IP
-evolve-netscan scan 192.168.1.1 --safe
+netscan-master scan 192.168.1.1 --safe
 
 # Or use the short alias
 netscan scan 192.168.1.1 --safe
