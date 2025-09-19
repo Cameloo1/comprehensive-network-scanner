@@ -10,6 +10,23 @@ th,td{border:1px solid #ddd;padding:.4rem} .badge{padding:.2rem .5rem;border-rad
 <h1>External Vulnerability Assessment</h1>
 <p><strong>Scan ID:</strong> {{ scan.id }} | <strong>Target:</strong> {{ scan.target }} | <strong>Safe Mode:</strong> {{ scan.safe_mode }}</p>
 
+<h2>Scan Information</h2>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>
+<tr><td><strong>Scan Started</strong></td><td>{{ scan.started.strftime('%Y-%m-%d %H:%M:%S UTC') if scan.started else 'Unknown' }}</td></tr>
+<tr><td><strong>Scan Finished</strong></td><td>{{ scan.finished.strftime('%Y-%m-%d %H:%M:%S UTC') if scan.finished else 'In Progress' }}</td></tr>
+<tr><td><strong>Scan Period</strong></td><td>
+  {% if scan.started and scan.finished %}
+    {{ scan.started.strftime('%Y-%m-%d %H:%M:%S UTC') }} to {{ scan.finished.strftime('%Y-%m-%d %H:%M:%S UTC') }}
+  {% elif scan.started %}
+    Started {{ scan.started.strftime('%Y-%m-%d %H:%M:%S UTC') }} (In Progress)
+  {% else %}
+    Unknown
+  {% endif %}
+</td></tr>
+<tr><td><strong>Total Targets</strong></td><td>{{ hosts|length }}</td></tr>
+<tr><td><strong>Safe Mode</strong></td><td>{{ 'Enabled' if scan.safe_mode else 'Disabled' }}</td></tr>
+</tbody></table>
+
 <h2>Executive Summary</h2>
 <p>
   <span class="badge high">High: {{ totals.high }}</span>

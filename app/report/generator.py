@@ -3,6 +3,7 @@ from app.core.db import SessionLocal, Scan, Host, Port, Finding, WebTarget
 import os
 import sys
 import json
+import datetime
 
 env = Environment(loader=FileSystemLoader("app/ui/templates"), autoescape=select_autoescape())
 
@@ -221,7 +222,19 @@ def make_report(scan_id:str):
             # Format scan period using actual scan times
             scan_start_time = ctx['scan'].started
             scan_end_time = ctx['scan'].finished if ctx['scan'].finished else datetime.datetime.utcnow()
-            story.append(Paragraph(f" Scan Period: {scan_start_time.strftime('%Y-%m-%d %H:%M UTC')} to {scan_end_time.strftime('%Y-%m-%d %H:%M UTC')}", styles['Normal']))
+            
+            # Ensure we have proper datetime objects and format them correctly
+            if scan_start_time:
+                start_str = scan_start_time.strftime('%Y-%m-%d %H:%M:%S UTC')
+            else:
+                start_str = 'Unknown'
+                
+            if scan_end_time:
+                end_str = scan_end_time.strftime('%Y-%m-%d %H:%M:%S UTC')
+            else:
+                end_str = 'In Progress'
+                
+            story.append(Paragraph(f" Scan Period: {start_str} to {end_str}", styles['Normal']))
             story.append(Spacer(1, 6))
             
             # Vulnerability summary
