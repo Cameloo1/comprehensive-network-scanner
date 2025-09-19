@@ -50,17 +50,32 @@ A comprehensive, automated network penetration testing tool designed for securit
 
 ### Installation
 
-#### Kali Linux (Quick Install)
-For Kali Linux users, use the automated installation script:
+#### Kali Linux (One-Click Install) - **RECOMMENDED**
+For Kali Linux users, use the new combined installation script that automatically fixes system issues and installs NetScan:
 ```bash
 # Navigate to the project directory
 cd evolve-netscan
 
-# If you have system issues (dpkg errors, broken packages), run this first:
+# Run the complete automated installation (fixes system + installs NetScan)
+chmod +x netscan_kali_install.sh
+./netscan_kali_install.sh
+
+# Test installation
+chmod +x test_kali_install.sh
+./test_kali_install.sh
+```
+
+#### Kali Linux (Manual Two-Step Install)
+If you prefer to run the installation in separate steps:
+```bash
+# Navigate to the project directory
+cd evolve-netscan
+
+# Step 1: Fix system issues (dpkg errors, broken packages)
 chmod +x fix_kali_system.sh
 ./fix_kali_system.sh
 
-# Run automated Kali installation
+# Step 2: Run NetScan installation
 chmod +x install_kali.sh
 ./install_kali.sh
 
@@ -70,6 +85,16 @@ chmod +x test_kali_install.sh
 ```
 
 **Having installation issues?** Check the [Kali Troubleshooting Guide](KALI_TROUBLESHOOTING.md) for specific error solutions.
+
+#### Benefits of the Combined Installation Script
+The `netscan_kali_install.sh` script provides several advantages:
+- **Automated System Repair**: Fixes common Kali Linux package manager issues (dpkg errors, broken packages)
+- **Seamless Installation**: No manual intervention required between system fix and NetScan installation
+- **Enhanced Error Handling**: Continues installation even if non-critical errors occur
+- **Visual Progress Tracking**: Color-coded output with clear phase indicators
+- **Comprehensive Dependency Management**: Installs all required system and Python dependencies
+- **Path Configuration**: Automatically configures user PATH for immediate usage
+- **Verification**: Built-in installation verification and optional desktop shortcut creation
 
 #### Option 1: From Source (Recommended)
 ```bash
@@ -439,10 +464,11 @@ python -m app.core.cli --help
 ### Getting Help
 
 If you encounter issues:
-1. Check the [KALI_INSTALL.md](KALI_INSTALL.md) for Kali Linux specific instructions
-2. Run the test script: `./test_kali_install.sh`
-3. Use the module form: `python -m app.core.cli --help`
-4. Check that all system dependencies are installed
+1. **For Kali Linux**: Try the combined installation script: `./netscan_kali_install.sh`
+2. Check the [KALI_INSTALL.md](KALI_INSTALL.md) for Kali Linux specific instructions
+3. Run the test script: `./test_kali_install.sh`
+4. Use the module form: `python -m app.core.cli --help`
+5. Check that all system dependencies are installed
 
 ## Legal Disclaimer
 
