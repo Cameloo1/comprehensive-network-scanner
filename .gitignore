@@ -201,3 +201,4 @@ htmlcov/
 # Local configuration
 config.local.py
 settings.local.py
+target_ips.txt
