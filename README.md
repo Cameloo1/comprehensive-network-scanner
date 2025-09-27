@@ -1,10 +1,10 @@
-# Evolve NetScan
+# NetScan
 
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Security](https://img.shields.io/badge/security-penetration--testing-red.svg)](https://github.com/yourusername/evolve-netscan)
 
-A comprehensive, automated network penetration testing tool designed for security professionals and ethical hackers. Evolve NetScan combines multiple industry-standard tools into a unified platform with real-time progress tracking, comprehensive reporting, and concurrent scanning capabilities.
+A comprehensive, automated network penetration testing tool designed for security professionals and ethical hackers. NetScan combines multiple industry-standard tools into a unified platform with real-time progress tracking, comprehensive reporting, and concurrent scanning capabilities.
 
 ## Features
 
